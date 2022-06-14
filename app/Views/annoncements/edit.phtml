@@ -1,0 +1,33 @@
+<?php
+use \App\Entitys\AnnoncementEntity;
+?>
+<section class ='inscrire'>
+
+                <?php foreach($annoncement->getImages() as $image):?>
+
+                    <img src=".././public/<?= $image->getPath() .'/'. $image->getName()?>" alt="logo de luxo">
+                        <div>
+                            <a href=#><i class="fas fa-edit"></i></a>
+                            <a href=#><i class="fas fa-trash"></i></a>
+                        </div>
+
+                <?php endforeach;?>
+
+    </section>
+    <form action='#' method='post' enctype="multipart/form-data">
+
+        <?=$form->input('title','text', 'titre')?>
+        <?=$form->textarea('description')?>
+        <?=$form->input('floor','number', 'étage')?>
+        <?=$form->input('room','number', 'piéce')?>
+        <?=$form->input('surface','number', 'surface')?>
+        <?=$form->input('city', 'text', 'ville')?>
+        <?=$form->input('zip', 'text', 'postal')?>
+        <?=$form->input('price', 'text', 'prix')?>
+        <?=$form->option('category', AnnoncementEntity::CATEGORYS, 'categorie')?>
+        <?=$form->option('type', AnnoncementEntity::TYPES, 'type')?>
+
+        <?=$form->button('modifier')?>
+        <?=$form->button('supprimé')?>
+    </form>
+</section>

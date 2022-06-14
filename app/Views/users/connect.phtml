@@ -1,0 +1,14 @@
+<section class='form'>
+
+    <?php if(isset($success)):?>
+        <div class="success"><span><?=$success?></span></div>
+    <?php elseif($error):?>
+        <div class="error"><span><?=$error?></span></div>
+    <?php endif?>
+    <form action="index.php?action=user.connect" method="POST" id="connect">
+        <h2>connection</h2>
+        <?=$form->input('mail', 'mail', ['type' => 'mail'])?>
+        <?=$form->input('password','mot de passe',['type'=> "password"])?>
+        <button type="submit">connect</button>
+    </form>
+</section>

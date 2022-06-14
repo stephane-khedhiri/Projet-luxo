@@ -1,0 +1,87 @@
+.graph {
+    position: relative; }
+
+.graph-x {
+    position: absolute;
+    right: 0;
+    left: 0px;
+    bottom: -10px;
+    font-size: 12px; }
+
+.graph-x span {
+    display: block;
+    position: absolute;
+    width: 100px;
+    text-align: center;
+    margin-left: -50px; }
+
+.graph-y {
+    position: absolute;
+    left: -20px;
+    bottom: 0px;
+    top: 0;
+    font-size: 12px; }
+
+.graph-y span {
+    display: block;
+    position: absolute;
+    width: 100px;
+    text-align: center;
+    margin-left: -50px;
+    height: 16px;
+    line-height: 16px;
+    margin-bottom: -8px; }
+
+.graph svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; }
+
+.graph-line {
+    stroke-width: 2px;
+    stroke: #3cc5f1;
+    fill: transparent; }
+
+.graph-stroke {
+    stroke-width: 2px;
+    stroke: #000;
+    fill: transparent; }
+
+.graph-v {
+    stroke-width: 1px;
+    stroke: #e2e2e2;
+    fill: transparent; }
+
+.graph-fill {
+    stroke-width: 0px;
+    stroke: #3cc5f1;
+    fill: #d0f4ff; }
+
+.graph-point {
+    stroke-width: 3px;
+    stroke: #3cc5f1;
+    fill: white;
+    transition-duration: .3s; }
+
+.graph-point:hover {
+    stroke-width: 5px; }
+
+
+.graph-rect{
+    stroke:red;
+    stroke-width:5px;
+    fill:green;
+}
+.graph-rect:hover{
+    stroke-width:15px;
+}
+.graph-text{
+    fill:transparent;
+    stroke:red;
+    font-size: 50px;
+    stroke-width:2px;
+    text-anchor:middle;
+    baseline-shift:-0.5ex;
+}

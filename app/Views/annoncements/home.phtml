@@ -1,0 +1,59 @@
+<section class="info">
+    <h1>Luxo Have New Offers For You</h1>
+    <article>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab culpa deserunt dignissimos eaque excepturi
+            explicabo, illum incidunt ipsum minus nobis pariatur placeat possimus qui recusandae sapiente voluptate
+            voluptatum! Aut, molestiae?</p>
+    </article>
+</section>
+<section class="container-annoncement">
+    <h2>location</h2>
+    <?php foreach ($locations as $location): ?>
+        <article>
+            <a href="index.php?action=annoncement.detail&id=<?= $location->getId() ?>">
+                <section class="slider">
+                    <div class="flexslider">
+                        <ul class="slides">
+                            <?php foreach ($location->getImages() as $image): ?>
+                                <li>
+                                    <img src=".././public/<?= $image->getPath() . $image->getName()?>" alt="logo de luxo">
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </section>
+                <h3><?= $location->getTitle()?></h3>
+                <span><?= $location->getCity() ?>-<?= $location->getZip() ?></span>
+                <p><?= $location->getDescription() ?></p>
+                <h4><?= $location->getPrice()?></h4>
+            </a>
+        </article>
+    <?php endforeach; ?>
+</section>
+<section class="info2">
+    <h2>New <span>Life</span>, New <span>Beginning</span></h2>
+</section>
+<section class="container-annoncement">
+    <h2>achat</h2>
+    <?php foreach ($achats as $achat): ?>
+        <article>
+            <a href="index.php?action=annoncement.detail&id=<?= $achat->getId() ?>">
+                <section class="slider">
+                    <div class="flexslider">
+                        <ul class="slides">
+                            <?php foreach ($achat->getImages() as $image): ?>
+                                <li>
+                                    <img src=".././public/<?= $image->getPath() . $image->getName() ?>" alt="logo de luxo">
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </section>
+                <h3><?= $achat->getTitle() ?></h3>
+                <span><?= $achat->getCity() ?>-<?= $achat->getZip() ?></span>
+                <p><?= $achat->getDescription() ?></p>
+                <h4><?= $achat->getPrice() ?></h4>
+            </a>
+        </article>
+    <?php endforeach; ?>
+</section>

@@ -1,0 +1,75 @@
+<?php
+use App\App;
+?>
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/106df05c6f.js" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href=".././public/image/logo.png" />
+    <link rel="stylesheet" href=".././public/css/normalize.css"/>
+    <link rel="stylesheet" href=".././public/css/flexslider.css"/>
+    <link rel="stylesheet" href=".././public/css/style.css"/>
+    <link rel="stylesheet" href=".././public/css/svg.css"/>
+    <link rel="stylesheet" href=".././public/css/table.css"/>
+    <title><?=App::getInstance()->title;?></title>
+</head>
+<body>
+    <header>
+        <a href="index.php?action=annoncement.home"><img class="logo" src=".././public/image/logo.png" alt="logo de luxo"></a>
+        <nav>
+            <a href="index.php?action=annoncement.category&c=achat">achat</a>
+            <a href="index.php?action=annoncement.category&c=location">location</a>
+            <?php if(App::getInstance()->is_admin()):?>
+
+                <ul class="menu">
+                    <li>
+                        <a href="index.php?action=admins.admin.statis">statistique</a>
+                        <ul class="sous">
+                            <?php for ($date = date('Y'); $date > date('Y')-5; $date--):?>
+                            <li><a href="index.php?action=admins.admin.statis&year=<?=$date?>"><?=$date?></a></li>
+                            <?php endfor;?>
+                        </ul>
+                    </li>
+                </ul>
+                <a href="index.php?action=admins.admin.users">utilisateur</a></li>
+                <a href="index.php?action=admins.admin.disconnect">déconnection</a>
+            <?php elseif(App::getInstance()->is_user()):?>
+                <ul class="menu">
+                    <li>
+                        <a href="#"><i class="fa-solid fa-user"></i></a>
+                        <ul class="user">
+				            <li><a href="index.php?action=users.user.edit">compte</a></li>
+                            <li><a href="index.php?action=users.annoncement.list">annonces</a></li>
+                            <li><a href="index.php?action=users.user.disconnect">déconnection</a></li>
+                            <li><a href="index.php?action=users.user.deleted" style="color: #cc0033">supprimer</a> </li>
+                        </ul>
+                    </li>
+                </ul>
+            <?php else:?>
+                <a href="index.php?action=user.create">s'inscrire</a>
+                <a href="index.php?action=user.connect">connection</a>
+            <?php endif;?>
+        </nav>
+
+    </header>
+    <main>
+
+        <?=$content?>
+        
+    </main>
+    <footer>
+        <p>all Rights Reserved.</p>
+        <div class ="social">
+
+            <i class="fab fa-facebook-square"></i>
+            <i class="fab fa-twitter-square"></i>
+            <i class="fab fa-linkedin"></i>
+        </div>
+    </footer>
+    <script type="module" src=".././public/script/script.js"></script>
+</body>
+</html>

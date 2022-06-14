@@ -1,0 +1,39 @@
+<section class="container_user">
+
+    <section class = "container-annoncement">
+        <?php foreach($annoncements as $annoncement):?>
+                <article>
+                    <a href="index.php?action=detail&id=<?=$annoncement->getId()?>">
+                    <h2><?=$annoncement->getTitle()?></h2>
+                    <section class="slider">
+                        <div class="flexslider">
+                            <ul class="slides">
+                            <?php foreach ($annoncement->getImages() as $image):?>
+                                <li>
+                                    <img src=".././public/<?= $image->getPath() . $image->getName() ?>"/>
+                                </li>
+                            <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </section>
+                        <h3><?= $annoncement->getTitle()?></h3>
+                        <span><?= $annoncement->getCity() ?>-<?= $annoncement->getZip() ?></span>
+                        <p><?= $annoncement->getDescription() ?></p>
+                        <h4><?= $annoncement->getPrice() . '€' ?></h4>
+                    </a>
+                </article>
+
+        <?php endforeach;?>
+
+</section>
+    <div class = "pagination">
+        <?php if($currentPage > 1):?>
+            <a href="index.php?action=<?=$_GET['action']?>&id=<?=$_GET['id']?>&p=<?=$currentPage - 1?>">&laquo; Page précédent</a>
+        <?php endif;?>
+        <?php for($i= 1; $i <= $pages; $i++):?>
+            <a  <?=($i == $currentPage)?'id="active"':''?>" href="index.php?action=<?=$_GET['action']?>&id=<?=$_GET['id']?>&p=<?=$i?>"><?=$i?></a>
+        <?php endfor;?>
+        <?php if($currentPage < $pages):?>
+            <a href="index.php?action=<?=$_GET['action']?>&id=<?=$_GET['id']?>&p=<?=$currentPage + 1?>"> Page suivante &raquo</a>
+        <?php endif ?>
+    </div>

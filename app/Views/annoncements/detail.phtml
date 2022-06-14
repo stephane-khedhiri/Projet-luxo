@@ -1,0 +1,40 @@
+
+<section class="container-annoncement">
+        <section class="slider">
+            <div class="flexslider">
+                <ul class="slides">
+                    <?php foreach ($annoncement->getImages() as $image):?>
+                    <li>
+
+                        <img src=".././public/<?= $image->getPath() . $image->getName()?>"/>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </section>
+    <!-- ajoute adresse sur la map ajoute une option show adresse ou pas  -->
+        <section class="map">
+            <!-- ajouter du css -->
+            <iframe width="600"
+                    height="450"
+                    style="border:0"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=<?=$annoncement->getZip()?>=&z=12&ie=UTF8&iwloc=&output=embed"></iframe>
+        </section>
+    <article class = 'annoncement.detail'>
+        <span>date de creation : <?=$annoncement->getDateAt()?></span>
+        <h2><?=$annoncement->getTitle()?></h2>
+        <p><?=$annoncement->getDescription()?></p>
+        <p>chambre : <?=$annoncement->getRoom()?></p>
+        <p>surface : <?=$annoncement->getSurface() .'m²'?></p>
+        <p>étage : <?=$annoncement->getFloor()?></p>
+        <p>type de bien : <?=$annoncement->getTypeToString()?></p>
+        <p>categorie : <?=$annoncement->getCategoryToString()?></p>
+        <p>prix : <?=$annoncement->getPrice()?></p>
+        <span>zone : <?=$annoncement->getCity().'/'.$annoncement->getZip()?></span>
+
+    </article>
+
+    
+</section>

@@ -1,0 +1,20 @@
+<?php
+use \App\Entitys\AnnoncementEntity;
+?>
+<h1>création</h1>
+<form action='index.php?action=users.annoncement.create' method="post" enctype="multipart/form-data" id="create">
+    <?php if($error):?>
+        <div><?=$error?></div>
+    <?php endif ?>
+    <?=$form->input('title','titre',['type'=>'text'])?>
+    <?=$form->input('description', 'description', ['type'=> 'textarea'])?>
+    <?=$form->input('floor','étage')?>
+    <?=$form->input('room', 'piéce')?>
+    <?=$form->input('surface','surface')?>
+    <?=$form->input('price', 'prix')?>
+    <?=$form->option('city', 'ville',AnnoncementEntity::CITYS )?>
+    <?=$form->input('images[]','images', ['type'=>'file'])?>
+    <?=$form->option('category', 'categorie', AnnoncementEntity::CATEGORYS)?>
+    <?=$form->option('type', 'type', AnnoncementEntity::TYPES)?>
+    <?=$form->submit()?>
+</form>

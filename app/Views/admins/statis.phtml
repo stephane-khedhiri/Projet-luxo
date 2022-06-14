@@ -1,0 +1,8 @@
+<?php
+use \Core\HTML\Graph;
+
+?>
+<section class="container-annoncement">
+        <?=($visiteurGrafig?Graph::line($visiteurGrafig,'visiteur'):'') ;?>
+        <?=($usersGrafig?Graph::line($usersGrafig,'utilisateur'):'');?>
+</section>

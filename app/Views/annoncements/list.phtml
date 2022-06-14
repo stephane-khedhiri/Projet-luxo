@@ -1,0 +1,55 @@
+<section class="container-table">
+    <h1>mes annonces</h1>
+    <?php if($error):?>
+        <div class="error">
+            <span><?=$error?></span>
+        </div>
+    <?php endif; ?>
+    <?php if($annoncements): ?>
+        <div class="tbl-header">
+            <table>
+                <thead>
+                <tr>
+                    <th>titre</th>
+                    <th>mise en ligne</th>
+                    <th>action</th>
+                </tr>
+
+                </thead>
+            </table>
+        </div>
+        <div class="tbl-content">
+            <table>
+                <tbody>
+
+                    <?php foreach($annoncements as $annoncement):?>
+                    <tr>
+                        <td><?=$annoncement->getTitle()?></td>
+                        <td><?=$annoncement->getDateAt()?></td>
+                        <td>
+                            <a href="index.php?action=users.annoncement.edit&id=<?= $annoncement->getId()?>">edit</a>
+                            <a href ="index.php?action=users.annoncement.deleted&id=<?= $annoncement->getId()?>">delect</a>
+                        </td>
+                    </tr>
+                    <?php endforeach;?>
+
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+    <a class="button" href="index.php?action=users.annoncement.create">Add Annoncement</a>
+</section>
+<div class = "pagination">
+    <?php if($currentPage > 1):?>
+        <a href="index.php?action=<?=$_GET['action']?>&pages=<?=$currentPage - 1?>">&laquo; Page précédent</a>
+    <?php endif;?>
+    <?php for($i= 1; $i <= $pages; $i++):?>
+        <a  <?=($i == $currentPage)?'id="active"':''?>" href="index.php?action=<?=$_GET['action']?>&pages=<?=$i?>"><?=$i?></a>
+    <?php endfor;?>
+    <?php if($currentPage < $pages):?>
+        <a href="index.php?action=<?=$_GET['action']?>&pages=<?=$currentPage + 1?>"> Page suivante &raquo</a>
+    <?php endif ?>
+</div>
+
+
+

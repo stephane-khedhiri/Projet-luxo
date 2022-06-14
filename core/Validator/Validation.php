@@ -57,6 +57,7 @@ class Validation
         return $this->rules[$key];
     }
 
+
     /**
      * @param $rules
      * @param $key

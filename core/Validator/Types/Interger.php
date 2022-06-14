@@ -19,7 +19,7 @@ class Interger
      * @throws Exception
      */
     static public function Interger(string $value, string $key){
-        if (!preg_match("/[0-9]/gm", $value)){
+        if (!preg_match("/[0-9]/", $value)){
             throw new Exception(sprintf(self::$message, $value, $key));
         }
     }

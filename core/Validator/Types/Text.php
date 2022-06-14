@@ -15,7 +15,7 @@ class Text
      * @throws Exception
      */
     static public function Text(string $value, string $key){
-        if(!preg_match("/[a-zA-Z_-]+([^._-])/gm", $value)){
+        if(!preg_match("/[a-zA-Z_-]+([^._-])/", $value)){
             throw new Exception(sprintf(self::$message, $value, $key));
         }
     }

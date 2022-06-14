@@ -16,6 +16,17 @@ class App
      * @var string
      */
     public $title = 'luxo';
+
+
+    /**
+     * @var null
+     */
+    public $error = null;
+
+    /**
+     * @var null
+     */
+    public $sucess = null;
     /**
      * @var Database
      */

@@ -4,6 +4,9 @@ namespace Core\Validator;
 
 
 
+use App\Entitys\AdminEntity;
+use App\Entitys\AnnoncementEntity;
+use App\Entitys\UserEntity;
 use Exception;
 
 class Validation
@@ -103,6 +106,22 @@ class Validation
      */
     private function getValue(string $key){
         return $this->inputs[$key];
+    }
+
+    /**
+     * recupere les donnes du formulaire à objet du type entity passe en paramétre
+     * @param UserEntity|AnnoncementEntity|AdminEntity $entity
+     * @return UserEntity | AnnoncementEntity | AdminEntity
+     */
+    public function getData($entity){
+        $class = new $entity();
+        foreach($this->inputs as $key => $value){
+            $method = 'set'. ucfirst($key);
+            if(method_exists($class, $method)){
+                $class->$method(htmlspecialchars($this->inputs[$key]));
+            }
+        }
+        return $class;
     }
 
 }

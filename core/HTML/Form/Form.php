@@ -86,23 +86,4 @@ class Form{
         return $this->surround('<button type="submit">Envoyer</button>');
     }
 
-
-    /**
-     * recupere les donnes du formulaire à objet du type entity passe en paramétre
-     * @param object $entity
-     * @return UserEntity | AnnoncementEntity | AdminEntity
-     */
-    public function getData(string $entity){
-        $class = new $entity();
-        foreach($this->data as $key => $value){
-            $method = 'set'. ucfirst($key);
-            if(method_exists($class, $method)){
-                $class->$method(htmlspecialchars($this->data[$key]));
-            }
-        }
-        return $class;
-
-    }
-
-
 }

@@ -20,7 +20,6 @@ class Lenght
      * @throws Exception
      */
     static public function Lenght(string $value, string $key,int $min, int $max){
-        var_dump($min);
         if (strlen($value) < $min){
             throw new Exception(sprintf(self::$message, $value, $min,$max));
         }

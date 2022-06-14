@@ -67,7 +67,6 @@ class Validation
         foreach ($rules as $i => $rule){
             $params = [];
             list($rulename, $params) = $this->parseRule($rule, $value, $key);
-            var_dump($params);
             if($rulename){
                 call_user_func_array([$this->validator->validators[$rulename],$rulename ], $params);
 

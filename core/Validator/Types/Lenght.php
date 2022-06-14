@@ -9,18 +9,19 @@ class Lenght
     /**
      * @var string
      */
-    protected $message = "%s doit contenir entre %s et %s caractère !";
+    static protected $message = "%s doit contenir entre %s et %s caractère !";
+
 
     /**
-     * @param $value
-     * @param $min
-     * @param $max
+     * @param string $value
+     * @param string $min
+     * @param string $max
      * @return void
      * @throws Exception
      */
-    public function lenght($value, $min, $max){
+    static public function Lenght(string $value, string $min, string $max){
         if (strlen($value) < $min || strlen($value) > $max){
-            throw new Exception(sprintf($this->message, $value, $min,$max));
+            throw new Exception(sprintf(self::$message, $value, $min,$max));
         }
     }
 }

@@ -6,9 +6,18 @@ use Exception;
 
 class Required
 {
-    static public $message = "le champ %s est obligatoire";
+    /**
+     * @var string
+     */
+    static protected $message = "le champ %s est obligatoire";
 
-    static public function Required($value, $key)
+    /**
+     * @param string $value
+     * @param string $key
+     * @return void
+     * @throws Exception
+     */
+    static public function Required(string $value, string $key)
     {
         if($value === ''){
             throw new Exception(sprintf(self::$message, $key));

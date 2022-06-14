@@ -4,24 +4,19 @@ namespace Core\Validator\Types;
 
 use Exception;
 
-class Text implements InterfaceType
+class Text
 {
-    public $message = " %s n'est pas un %s valide";
-    public function Text($value, $key){
+    static public $message = " %s n'est pas un %s valide";
+
+    /**
+     * @param string $value
+     * @param string $key
+     * @return void
+     * @throws Exception
+     */
+    static public function Text(string $value, string $key){
         if(!preg_match("/[a-zA-Z_-]+([^._-])/gm", $value)){
-            throw new Exception(sprintf($this->message, $value, $key));
+            throw new Exception(sprintf(self::$message, $value, $key));
         }
-    }
-
-    public function Required($value)
-    {
-        if(empty($value)){
-            throw new Exception();
-        }
-    }
-
-    public function Length($value, $min, $max)
-    {
-        // TODO: Implement Length() method.
     }
 }

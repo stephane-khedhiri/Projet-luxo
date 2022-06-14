@@ -14,13 +14,14 @@ class Lenght
 
     /**
      * @param string $value
-     * @param string $min
-     * @param string $max
+     * @param integer $min
+     * @param integer $max
      * @return void
      * @throws Exception
      */
-    static public function Lenght(string $value, string $min, string $max){
-        if (strlen($value) < $min || strlen($value) > $max){
+    static public function Lenght(string $value, string $key,int $min, int $max){
+        var_dump($min);
+        if (strlen($value) < $min){
             throw new Exception(sprintf(self::$message, $value, $min,$max));
         }
     }

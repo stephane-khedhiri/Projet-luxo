@@ -67,6 +67,7 @@ class Validation
         foreach ($rules as $i => $rule){
             $params = [];
             list($rulename, $params) = $this->parseRule($rule, $value, $key);
+            var_dump($params);
             if($rulename){
                 call_user_func_array([$this->validator->validators[$rulename],$rulename ], $params);
 
@@ -88,7 +89,8 @@ class Validation
         $rulename = ucfirst($exp[0]);
         if(isset($exp[1])){
             $arg = explode(':', $exp[1]);
-           $params = array_merge(['value'=>$value, 'key' => $key], [$arg]);
+           $params = array_merge(['value'=>$value, 'key' => $key], $arg);
+
 
         }else{
             $params = ['value' => $value, 'key' => $key];

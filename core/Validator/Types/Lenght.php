@@ -19,8 +19,8 @@ class Lenght
      * @return void
      * @throws Exception
      */
-    static public function Lenght(string $value, string $key,int $min, int $max){
-        if (strlen($value) < $min){
+    static public function Lenght(string $value, string $key,int $min, int $max = 20){
+        if (strlen($value) < $min || strlen($value > $max)){
             throw new Exception(sprintf(self::$message, $value, $min,$max));
         }
     }

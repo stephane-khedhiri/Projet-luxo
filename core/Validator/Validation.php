@@ -41,11 +41,8 @@ class Validation
      */
     public function validate (){
         foreach ($this->rules as $key => $value){
-            if($key === 'email'){
             $rule=$this->getRule($key);
             $this->resoleveRule($rule, $key,$this->getValue($key));
-            }
-
         }
     }
 

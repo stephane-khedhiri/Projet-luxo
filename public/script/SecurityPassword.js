@@ -93,10 +93,12 @@ export default class SecurityPassword {
         }, this)
     }
     checkPassword = function (password, password1){
-        if(password === password1){
-            this.AddIcon('confirme')
-        }else{
-            this.removeIcon('confirme')
+        if (password !== ''){
+            if(password === password1){
+                this.AddIcon('confirme')
+            }else{
+                this.removeIcon('confirme')
+            }
         }
     }
 

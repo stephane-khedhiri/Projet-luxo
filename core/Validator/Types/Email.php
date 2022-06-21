@@ -15,11 +15,11 @@ class Email
 
     /**
      * check la valeur si c'est un email
-     * @param $value
+     * @param string $value
      * @return void
      * @throws Exception
      */
-    static public function Email($value) {
+    static public function Email(string $value = '', $key) {
         if(!filter_var($value, FILTER_VALIDATE_EMAIL)){
             throw new Exception(sprintf(self::$message, $value));
         }

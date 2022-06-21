@@ -24,6 +24,8 @@ class Validation
      */
     private $rules = [];
 
+    protected $errors=[];
+
 
     /**
      * @param validator $validator
@@ -44,8 +46,8 @@ class Validation
      */
     public function validate (){
         foreach ($this->rules as $key => $value){
-            $rule=$this->getRule($key);
-            $this->resoleveRule($rule, $key,$this->getValue($key));
+
+            $this->resoleveRule($value, $key,$this->getValue($key));
         }
     }
 
@@ -54,17 +56,17 @@ class Validation
      * @return mixed
      */
     public function getRule($key){
-        return $this->rules[$key];
+        return $this->rules[ucfirst($key)];
     }
 
 
     /**
      * @param $rules
      * @param $key
-     * @param $value
+     * @param string $value
      * @return void
      */
-    protected function resoleveRule($rules, $key, $value){
+    protected function resoleveRule($rules, $key,string $value = ''){
         if (is_string($rules)){
             $rules = explode('|', $rules);
         }
@@ -72,8 +74,17 @@ class Validation
             $params = [];
             list($rulename, $params) = $this->parseRule($rule, $value, $key);
             if($rulename){
+                try{
                 call_user_func_array([$this->validator->validators[$rulename],$rulename ], $params);
-
+                }catch (Exception $e){
+                    if (!isset($this->errors[$e->getTrace()[2]['args'][1]])){
+                        $this->errors[$e->getTrace()[2]['args'][1]] = ['key'=> $e->getTrace()[2]['args'][1],'message'=>$e->getMessage()];
+                    }else{
+                        if(!in_array($this->errors[$e->getTrace()[2]['args'][1]], $this->getErrors())){
+                            $this->errors[$e->getTrace()[2]['args'][1]] = ['key'=> $e->getTrace()[2]['args'][1],'message'=>$e->getMessage()];
+                        }
+                    }
+                }
             }
         }
     }
@@ -106,7 +117,10 @@ class Validation
      * @return mixed
      */
     private function getValue(string $key){
-        return $this->inputs[$key];
+        if(isset($this->inputs[$key])){
+            return $this->inputs[$key];
+        }
+        return '';
     }
 
     /**
@@ -123,6 +137,9 @@ class Validation
             }
         }
         return $class;
+    }
+    public function getErrors(){
+        return $this->errors;
     }
 
 }

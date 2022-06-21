@@ -17,10 +17,11 @@ class Required
      * @return void
      * @throws Exception
      */
-    static public function Required(string $value, string $key)
+    static public function Required(string $value , string $key)
     {
-        if($value === ''){
+        if(strlen($value)<= 0){
             throw new Exception(sprintf(self::$message, $key));
         }
+
     }
 }

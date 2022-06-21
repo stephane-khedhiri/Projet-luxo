@@ -33,7 +33,8 @@ class Controller
     public function Forbidden ()
     {
         header('HTTP/1.0 403 Forbidden');
-        die('accés interdit');
+        $this->render('403');
+        die();
     }
     public function notFound()
     {

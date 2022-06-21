@@ -17,7 +17,7 @@ function createError(name , message){
     let label = form.querySelector('[for='+name+']')
     div.classList = 'error'
     span.classList = 'error-message';
-    span.innerHTML = message.replace(name, label.innerHTML)
+    span.innerHTML = message.replace(name, label.innerHTML.replace('*',''))
     div.appendChild(span)
     let element = form.querySelector('[name='+ name +']')
     element.parentNode.appendChild(div)
@@ -56,24 +56,19 @@ form.addEventListener('submit',function(e){
 
     request.onreadystatechange = function () {
         if(this.readyState == 4){
-            if (this.status !== 200 || security.valide == false){
-
+            if (this.status !== 200){
                 let datas = JSON.parse(request.responseText);
-                if(security.valide == false){
-                    datas.password = {'key': 'password', 'message':'le champ password n\'a pas valide !'}
-                }
                 for (const[key,value] of Object.entries(datas)){
-                    createError(key, value.message)
+                    createError(key, value)
                 }
-
+            }else{
+                window.location.search = 'user.connect'
             }
-
-            }
-
         }
+    }
+
     request.open('POST', this.getAttribute('action'), true);
     request.setRequestHeader('X-Requested-With', 'xmlhttprequest');
-    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     request.send(data)
 })
 }

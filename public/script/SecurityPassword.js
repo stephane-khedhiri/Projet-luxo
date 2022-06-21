@@ -38,7 +38,6 @@ export default class SecurityPassword {
     AddIcon = function(selector){
         this.removeIcon(selector)
         this.li.innerHTML = '<i class="'+this.icon +'"></i>' + this.li.innerHTML
-        this.valide = true
     }
     removeIcon = function (selector) {
         this.li = this.form.querySelector('.'+selector)
@@ -46,7 +45,6 @@ export default class SecurityPassword {
         console.log(IconElement)
         if(IconElement){
             this.li.removeChild(IconElement)
-            this.valide = false
         }
 
     }
@@ -74,10 +72,6 @@ export default class SecurityPassword {
             parent.removeChild(child)
         }
     }
-    getValide = function(){
-        return this.valide
-    }
-
 
     ScurePassword = function(password){
 

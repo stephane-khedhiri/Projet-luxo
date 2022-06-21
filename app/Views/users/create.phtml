@@ -1,7 +1,9 @@
-<?php if(isset($success)):?>
-    <div class="success"><span><?=$success?></span></div>
-<?php elseif($error):?>
-    <div class="error"><span><?=$error?></span></div>
+<?php use App\App;
+
+if(isset(App::getInstance()->sucess)):?>
+    <div class="success"><span><?=App::getInstance()->sucess?></span></div>
+<?php elseif(isset(App::getInstance()->error)):?>
+    <div class="error"><span class="error-message"><?=App::getInstance()->error?></span></div>
 <?php endif?>
 <section class="form">
     <!-- id permet de selection le formulaire pour la verification -->
@@ -12,6 +14,7 @@
         <?=$form->input('username','utilisateur', ['type'=>'text'])?>
         <?=$form->input('email','email',['type'=>'email'])?>
         <?=$form->input('password','mot de passe',['type'=>'password'])?>
+        <?=$form->input('password1', 'comfirmation', ['type' => 'password'])?>
         <button type="submit">Crée</button>
     </form>
 </section>

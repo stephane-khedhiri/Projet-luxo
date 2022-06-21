@@ -12,8 +12,7 @@ use Core\Validator\Type\Email;
 use \Exception;
 
 class UserController extends AppControllers {
-    protected $errors = false;
-
+    protected $success;
     public function __construct(){
         parent::__construct();
         $this->loadModel('user');
@@ -23,104 +22,111 @@ class UserController extends AppControllers {
     }
     // create user
     public function create(){
-        /*
-         * $validator = new Validator();
-         * $validator->make([
-         *      'email' => required
-         *      'name' => required|text
-         * ])
-         * $validator->validate()
-         * if($validator->fails){
-         *  ici il y a des errors
-         * }
-         *
-         */
-        App::getInstance()->title = 'creation';
-        $form = new Form($_POST);
-        $error= false;
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            try{
-            $validator = new validator();
-            $validation = $validator->make($_POST, [
-                'email'=> 'required|email'
-            ]);
-                $validation->validate();
-            }catch (Exception $e){
-                var_dump($e->getMessage());
-            }
-            die();
-            try{
 
-                $newUser = $form->getData(UserEntity::class);
-                $userCurrent = $this->user->getUserByMail($newUser->getMail());
-                if($userCurrent){
-                    if ($this->isAjax()){
-                        echo json_encode(['name' =>'mail', 'message' => "l'utilisateur existe déjà"]);
+        App::getInstance()->title = 'create';
+        $form = new Form($_POST);
+
+        if(!empty($_POST)){
+
+                $validator = new validator();
+                $validation = $validator->make($_POST, [
+                    'name' => 'required|text|lenght,4:15',
+                    'firstName' => 'required|text|lenght,4:15',
+                    'username' => 'required|text|lenght,4:15',
+                    'email'=> 'required|email',
+                ]);
+
+                $validation->validate();
+            if(!$validation->getErrors()){
+                try {
+                    $newUser = $validation->getData(UserEntity::class);
+
+                    $user = $this->user->getUserByMail($newUser->getMail());
+                    if ($user){
+                        throw new Exception("l'adresse mail existe déjà");
+                    }
+                    $create = $this->user->CreateUser($newUser);
+                    if($create){
+                        App::getInstance()->sucess = "Compte crée";
+                        header('Location:index.php?action=user.connect');
+                    }
+                }catch (Exception $e){
+                    if($this->isAjax()){
+                        echo json_encode([$e->getMessage()]);
                         header('Content-Type: application/json');
                         http_response_code(400);
                         die();
-                    }else{
-                        throw new Exception("l'email existe déjà");
                     }
+                    App::getInstance()->error = $e->getMessage();
+
                 }
-                $result = $this->user->CreateUser($newUser);
-                if($result){
-                if ($this->isAjax()){
-                    echo json_encode(['success'=>'votre compte vient d\'être crée']);
+
+            }else{
+                if ($this->isAjax()) {
+                    echo json_encode($validation->getErrors());
                     header('Content-Type: application/json');
-                    http_response_code(200);
+                    http_response_code(400);
                     die();
                 }
-                $this->render('users.connect', ['form'=> $form, 'success'=>'votre compte vient d\'être crée']);
-                die();
-                }
-            }catch (Exception $e){
-                $error = $e->getMessage();
+                App::getInstance()->error = $validation->getErrors()[0];
             }
         }
-        $this->render('Users.create', ['form'=> $form, 'error'=>$error]);
+        $this->render('Users.create', ['form'=> $form, 'error'=>App::getInstance()->error]);
     }
     // make connect
     public function connect(){
-
+        App::getInstance()->title = 'connect';
         $form = new Form($_POST);
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        if(!empty($_POST)) {
-            try {
+                $validator = new validator();
+                $validation = $validator->make($_POST, [
+                    'email'=> 'required|email',
+                ]);
+                $validation->validate();
+                if(!$validation->getErrors()){
+                    try {
 
-                $userCurrent = $form->getData(UserEntity::class);
-                $user = $this->user->getUserByMail($userCurrent->getMail());
 
-                if ($user) {
-                    if (password_verify($userCurrent->getPassword(), $user->getPassword())) {
-                        $_SESSION['Users']['id'] = $user->getId();
-                        $_SESSION['Users']['name'] = $user->getName();
-                        $_SESSION['Users']['firstName'] = $user->getFirstName();
-                        $_SESSION['Users']['mail'] = $user->getMail();
-                        header('Location:index.php?action=users.annoncement.list');
-                    }else{
+                        $userCurrent = $validation->getData(UserEntity::class);
+                        $user = $this->user->getUserByMail($userCurrent->getMail());
+                        if ($user) {
+                            if (password_verify($userCurrent->getPassword(), $user->getPassword())) {
+                                $_SESSION['Users']['id'] = $user->getId();
+                                $_SESSION['Users']['name'] = $user->getName();
+                                $_SESSION['Users']['firstName'] = $user->getFirstName();
+                                $_SESSION['Users']['mail'] = $user->getMail();
+                                header('Location:index.php?action=users.annoncement.list');
+                            } else {
+                                throw new Exception('le mot de passe incorrect !');
+                            }
+                        } else {
+
+                            throw new Exception('l\'adresse email inconnu !');
+                        }
+                    }catch (Exception $e){
                         if($this->isAjax()){
-                            echo json_encode(['name' =>'password', 'message' => "le mot de passe incorrect !"]);
+                            echo json_encode([$e->getMessage()]);
                             header('Content-Type: application/json');
-                            http_response_code(200);
+                            http_response_code(400);
                             die();
                         }
-                        throw new Exception('le mot de passe incorrect !');
+                        App::getInstance()->error = $e->getMessage();
                     }
-                } else {
-                    if($this->isAjax()){
-                        echo json_encode(['name' =>'mail', 'message' => "E-mail inconnu !"]);
+                }else{
+                    if ($this->isAjax()) {
+                        echo json_encode($validation->getErrors());
                         header('Content-Type: application/json');
-                        http_response_code(200);
+                        http_response_code(400);
                         die();
                     }
-                    throw new Exception('E-mail inconnu !');
+                    foreach($validation->getErrors() as $k => $errors){
+
+                    App::getInstance()->error=$errors;
+                    }
                 }
-            }catch (Exception $e){
-                $this->errors = $e->getMessage();
-            }
         }
-        $this->render('users.connect', ['form' => $form, 'error' => $this->errors]);
+        $this->render('users.connect', ['form' => $form]);
     }
     // check connect
     public function isConnected() {

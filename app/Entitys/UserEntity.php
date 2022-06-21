@@ -39,28 +39,6 @@ class UserEntity
      */
     protected $annoncements;
 
-    private const REGEX = [
-        'text' => [
-            'regex' => "/^(?=.{4,20}$)(?![_.-])(?!.*[_.-]{2})[a-zA-Z_-]+([^._-])$/i",
-            'message' => [
-                'require' => 'le champ %s est requier',
-                'length' => 'le champ %s doit contenir plus 3 caractère !',
-                'invalide' => 'le champ %s ne doit pas contenir des chiffre',
-            ]
-        ],
-        'password' => [
-            'regex'=> "/^(?=(?:.*[A-Z]){2,})(?=(?:.*[a-z]){2,})(?=(?:.*\d){2,})(?=(?:.*[!@#$%^&*()\-_=+{};:,<.>]){2,})(?!.*(.)\1{2})([A-Za-z0-9!@#$%^&*()\-_=+{};:,<.>]{12,20})$/i",
-            'message' => [
-                'require' => 'le champ mot de passe est requier',
-                'invalide' => "le champ doit contenir :<br>
-                    le mot de passe contient au moins 2 lettres majuscules!<br>
-                    le mot de passe comporte au moins 2 lettres minuscules!<br>
-                    le mot de passe comporte au moins 2 chiffres (0-9)!<br>
-                    le mot de passe contient au moins 2 caractères spéciaux, du groupe !@#$%^&*()-_=+{};:,<.><br>
-                    le mot de passe est composé de 12 à 20 caractères"
-            ]
-        ]
-    ];
 
     public function __construct()
     {
@@ -97,13 +75,6 @@ class UserEntity
      */
     public function setName(string $name)
     {
-        if ($name == ""){
-            throw  new Exception(sprintf(self::REGEX['text']['message']['require'], 'nom'));
-        }elseif (strlen($name) < 4){
-            throw  new Exception(sprintf(self::REGEX['text']['message']['length'], 'nom'));
-        }elseif (!preg_match(self::REGEX['text']['regex'], $name)){
-            throw new Exception(sprintf(self::REGEX['text']['message']['invalide'],'nom'));
-        }
         $this->name = $name;
         return $this;
     }
@@ -122,13 +93,6 @@ class UserEntity
      */
     public function setFirstName($firstName)
     {
-        if ($firstName == "") {
-            throw  new Exception(sprintf(self::REGEX['text']['message']['require'],'prénom'));
-        }elseif (strlen($firstName) < 4){
-            throw  new Exception(sprintf(self::REGEX['text']['message']['length'], 'prénom'));
-        }elseif (!preg_match(self::REGEX['text']['regex'], $firstName)){
-            throw new Exception(sprintf(self::REGEX['text']['message']['invalide'], 'prénom'));
-        }
         $this->first_name = $firstName;
         return $this;
     }
@@ -146,11 +110,6 @@ class UserEntity
      */
     public function setMail($mail)
     {
-        if ($mail == ""){
-            throw  new Exception(sprintf(self::REGEX['text']['require'], 'email'));
-        }elseif(!filter_var($mail, FILTER_VALIDATE_EMAIL)){
-            throw new Exception(sprintf(self::REGEX['text']['message']['invalide'], 'email'));
-        }
         $this->mail = $mail;
         return $this;
     }
@@ -167,13 +126,6 @@ class UserEntity
      * @return self
      */
     public function setUsername($username){
-        if($username ==""){
-            throw new Exception(sprintf(self::REGEX['text']['message']['require'], 'utilisateur'));
-        }elseif (strlen($username) < 4){
-            throw new Exception(sprintf(self::REGEX['text']['message']['length'], 'utilisateur'));
-        }elseif (!preg_match(self::REGEX['text']['regex'], $username)){
-            throw new Exception(sprintf(self::REGEX['text']['message']['invalide'], 'utilisateur'));
-        }
         $this->username = $username;
         return $this;
     }
@@ -210,11 +162,6 @@ class UserEntity
      */
     public function setPassword($password)
     {
-        if($password == ""){
-            throw new Exception(self::REGEX['password']['message']['require']);
-        }elseif(!preg_match(self::REGEX['password']['regex'], $password)){
-            throw new Exception(self::REGEX['password']['message']['invalide']);
-        }
         $this->password = $password;
         return $this;
     }

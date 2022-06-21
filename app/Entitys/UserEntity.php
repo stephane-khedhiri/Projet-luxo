@@ -13,15 +13,7 @@ class UserEntity
     /**
      * @var string
      */
-    public $name;
-    /**
-     * @var string
-     */
-    public $first_name;
-    /**
-     * @var string
-     */
-    public $mail;
+    public $email;
     /**
      * @var string
      */
@@ -63,54 +55,19 @@ class UserEntity
     }
 
     /**
-     * @return string|null
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-    /**
-     * @param string $name
-     * @return self
-     */
-    public function setName(string $name)
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getFirstName()
-    {
-        return $this->first_name;
-
-    }
-    /**
-     * @param string $firstName
-     * @return self
-     */
-    public function setFirstName($firstName)
-    {
-        $this->first_name = $firstName;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getMail()
+    public function getEmail()
     {
-        return $this->mail;
+        return $this->email;
     }
     /**
-     * @param string $mail
+     * @param string $email
      * @return self
      */
-    public function setMail($mail)
+    public function setEmail($email)
     {
-        $this->mail = $mail;
+        $this->email = $email;
         return $this;
     }
 

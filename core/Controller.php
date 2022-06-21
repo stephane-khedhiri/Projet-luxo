@@ -23,6 +23,7 @@ class Controller
         require ($this->viewPath . 'templates/' . $this->template . '.phtml');
     }
 
+
     /**
      * @return bool
      */

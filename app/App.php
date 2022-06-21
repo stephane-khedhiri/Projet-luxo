@@ -19,15 +19,6 @@ class App
 
 
     /**
-     * @var null
-     */
-    public $error = null;
-
-    /**
-     * @var null
-     */
-    public $sucess = null;
-    /**
      * @var Database
      */
     private $db_instance;

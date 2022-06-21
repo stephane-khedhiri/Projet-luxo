@@ -19,7 +19,8 @@ class Email
      * @return void
      * @throws Exception
      */
-    static public function Email(string $value = '', $key) {
+    static public function Email(string $value , $key) {
+
         if(!filter_var($value, FILTER_VALIDATE_EMAIL)){
             throw new Exception(sprintf(self::$message, $value));
         }

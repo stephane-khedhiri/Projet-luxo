@@ -45,9 +45,20 @@ class Validation
      * @throws Exception
      */
     public function validate (){
-        foreach ($this->rules as $key => $value){
+        foreach ($this->inputs as $key => $value){
+            try{
+                $rule=$this->getRule($key);
 
-            $this->resoleveRule($value, $key,$this->getValue($key));
+                $this->resoleveRule($rule, $key,$value);
+            }catch (Exception $e){
+                if (!isset($this->errors[$e->getTrace()[2]['args'][1]])){
+                    $this->errors[$e->getTrace()[2]['args'][1]] = $e->getMessage();
+                }else{
+                    if(!in_array($this->errors[$e->getTrace()[2]['args'][1]], $this->errors)){
+                        $this->errors[$e->getTrace()[2]['args'][1]] = $e->getMessage();
+                    }
+                }
+            }
         }
     }
 
@@ -56,7 +67,10 @@ class Validation
      * @return mixed
      */
     public function getRule($key){
-        return $this->rules[ucfirst($key)];
+        if(isset($this->rules[$key])){
+            return $this->rules[$key];
+        }
+        return '';
     }
 
 
@@ -70,23 +84,17 @@ class Validation
         if (is_string($rules)){
             $rules = explode('|', $rules);
         }
-        foreach ($rules as $i => $rule){
-            $params = [];
-            list($rulename, $params) = $this->parseRule($rule, $value, $key);
-            if($rulename){
-                try{
-                call_user_func_array([$this->validator->validators[$rulename],$rulename ], $params);
-                }catch (Exception $e){
-                    if (!isset($this->errors[$e->getTrace()[2]['args'][1]])){
-                        $this->errors[$e->getTrace()[2]['args'][1]] = ['key'=> $e->getTrace()[2]['args'][1],'message'=>$e->getMessage()];
-                    }else{
-                        if(!in_array($this->errors[$e->getTrace()[2]['args'][1]], $this->getErrors())){
-                            $this->errors[$e->getTrace()[2]['args'][1]] = ['key'=> $e->getTrace()[2]['args'][1],'message'=>$e->getMessage()];
-                        }
-                    }
+
+            foreach ($rules as $i => $rule){
+                $params = [];
+                list($rulename, $params) = $this->parseRule($rule, $value, $key);
+                if($rulename){
+
+                    call_user_func_array([$this->validator->validators[$rulename],$rulename ], $params);
+
                 }
             }
-        }
+
     }
 
     /**
@@ -116,12 +124,7 @@ class Validation
      * @param string $key
      * @return mixed
      */
-    private function getValue(string $key){
-        if(isset($this->inputs[$key])){
-            return $this->inputs[$key];
-        }
-        return '';
-    }
+
 
     /**
      * recupere les donnes du formulaire à objet du type entity passe en paramétre

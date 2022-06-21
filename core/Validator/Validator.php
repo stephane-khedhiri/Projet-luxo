@@ -31,6 +31,7 @@ class validator
             'Required' => \Core\Validator\Types\Required::class,
             'Lenght' => \Core\Validator\Types\Lenght::class,
             'Interger' => \Core\Validator\Types\Interger::class,
+            'Password'=> \Core\Validator\Types\Password::class,
         ];
         foreach ($baseRules as $key => $rule){
             $this->validators[$key] = $rule;

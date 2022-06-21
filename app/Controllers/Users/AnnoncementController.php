@@ -10,12 +10,12 @@ use Core\FILES\Files;
 use Core\FILES\Uploader;
 use Core\FILES\UploadOberserver;
 use Core\HTML\Form\Form;
+use Core\Validator\validator;
 use Exception;
 use PDOException;
 
 class AnnoncementController extends AppControllers
 {
-    protected $errors = false;
     public function __construct()
     {
         parent::__construct();
@@ -34,17 +34,33 @@ class AnnoncementController extends AppControllers
             throw new Exception('Aucune annonce a était enregister !');
         }
         }catch (Exception $e){
-            $this->errors = $e->getMessage();
+            App::getInstance()->error = $e->getMessage();
         }
-        $this->render('annoncements.list', ['annoncements'=>$annoncements,"pages"=> $pages, "currentPage" => $currentPage, 'error' => $this->errors]);
+
+        $this->render('annoncements.list', ['annoncements'=>$annoncements,"pages"=> $pages, "currentPage" => $currentPage, 'success'=> App::getInstance()->getControllers()->sucess]);
     }
     // permet que l'utilisateur de poste une annonce
     public function create(){
-
+            App::getInstance()->title = "create annonce";
             $form = new Form($_POST);
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                App::getInstance()->error = null;
                 try {
-                    $annoncement= $form->getData(AnnoncementEntity::class);
+                    $valitator = new validator();
+                    /*il faut ajouter le file */
+                    $valitation = $valitator->make($_POST, [
+                        'title'=> 'required|text|lenght,3:20',
+                        'description' => 'required|text|lenght,20:100',
+                        'floor' => 'required|interger',
+                        'room' => 'required|interger',
+                        'surface' => 'required|interger',
+                        'price' => 'required|interger',
+                        'city' => 'required|text',
+                        'category' => 'required',
+                        'type' => 'required'
+                    ]);
+                    $valitation->validate();
+                    $annoncement= $valitation->getData(AnnoncementEntity::class);
                     $annoncement->setUser($_SESSION['Users']['id']);
                     $path = 'image/'.$annoncement->getCategoryToString().'/'.$annoncement->getUser().'/'.$annoncement->gettitle();
                     $image = new ImageEntity();
@@ -64,34 +80,24 @@ class AnnoncementController extends AppControllers
                     $this->loadModel('annoncement');
                     $result =$this->annoncement->Add($annoncement);
                     if ($result){
-                        if ($this->isAjax()){
-                            echo json_encode(['success'=>'votre annoncement a était crée']);
-                            header('Content-Type:application/json');
-                            http_response_code(200);
-                            die();
-                        }else{
-                            header('Location:index.php?action=users.annoncement.list');
-                        }
+                        header('Location:index.php?action=users.annoncement.list');
+
                     }else{
-                        if ($this->isAjax()) {
-                            echo json_encode(['name' => 'title', 'message' => 'une error est survenu !!']);
-                            header('Content-Type:application/json');
-                            http_response_code(400);
-                            die();
-                        }
+                        throw new Exception("une error est survenu !!");
+
                     }
                 }catch (Exception $e){
-                    $this->errors = $e->getMessage();
                     if ($this->isAjax()){
-                        echo json_encode(['name'=>$this->errors]);
+                        echo json_encode(['name'=>$e->getTrace(), 'message' => $e->getMessage()]);
                         header('Content-Type:application/json');
                         http_response_code(400);
                         die();
                     }
+                    App::getInstance()->error = $e->getMessage();
 
                 }
             }
-        $this->render('annoncements.create', ['form'=>$form, 'error'=> $this->errors]);
+        $this->render('annoncements.create', ['form'=>$form, 'error'=> App::getInstance()->error]);
 
     }
     // permet que l'utilisateur éditer sa propos  annonce
@@ -99,29 +105,14 @@ class AnnoncementController extends AppControllers
     {
         App::getInstance()->title = 'edit';
         $this->loadModel('annoncement');
-        $annoncements = $this->annoncement->getAnnoncement($_GET['id'], $_SESSION['Users']['id']);
+        $annoncement = $this->annoncement->getAnnoncement($_GET['id'], $_SESSION['Users']['id']);
 
-        $form = new Form($_POST, [], $annoncements);
+        $form = new Form($_POST, [], $annoncement);
 
         if (isset($_POST['modifier'])) {
-                // insert dans la base de données
-                $annoncement = $form->getData($annoncement);
-                $dir_upload = 'www/image/' . $annoncement->getTypeToString();
-                $upload = new Upload($dir_upload, $_FILES, $annoncement->getId(), $this->errors);
-                $upload->upload();
-                if (empty($upload->getErrors())) {
 
-                    $annoncement = $this->annoncements->AddAnnoncement($annoncement);
-                    if ($annoncement) {
-                        // ajouter envoie de mail de confirmation d'ajout d'annoncements
-                        $alert = "votre annonce a bien été créé";
-                    }
-
-                } else {
-                    $alert = implode('<br>', $upload->getErrors());
-                }
         }
-        $this->render('annoncements.edit', ['form' => $form, 'annoncement' => $annoncements]);
+        $this->render('annoncements.edit', ['form' => $form, 'annoncement' => $annoncement]);
 
     }
 
@@ -129,7 +120,6 @@ class AnnoncementController extends AppControllers
     // permet que l'utilisateur suprrime sa propos annonce
     public function deleted(){
         App::getInstance()->title = 'detail';
-
             if(isset($_GET['id'])){
                 try{
                 $this->loadModel('annoncement');

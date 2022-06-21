@@ -3,18 +3,17 @@
 if(isset(App::getInstance()->sucess)):?>
     <div class="success"><span><?=App::getInstance()->sucess?></span></div>
 <?php elseif(isset(App::getInstance()->error)):?>
-    <div class="error"><span class="error-message"><?=App::getInstance()->error?></span></div>
+    <div class="error"><span class="error-message"><?php var_dump(App::getInstance()->error)?></span></div>
 <?php endif?>
 <section class="form">
     <!-- id permet de selection le formulaire pour la verification -->
     <form action="index.php?action=user.create" method="post" id="create">
         <h2>Create</h2>
-        <?=$form->input('name','nom', ['type'=>'text'])?>
-        <?=$form->input('firstName','prénom', ['type'=>'text'])?>
-        <?=$form->input('username','utilisateur', ['type'=>'text'])?>
-        <?=$form->input('email','email',['type'=>'email'])?>
+        <?=$form->input('username', 'nom d\'utilisateur*', ['type'=>'text'])?>
+        <?=$form->input('email','email*',['type'=>'email'])?>
         <?=$form->input('password','mot de passe',['type'=>'password'])?>
         <?=$form->input('password1', 'comfirmation', ['type' => 'password'])?>
+        <span> * les champs sont obligatoire</span>
         <button type="submit">Crée</button>
     </form>
 </section>

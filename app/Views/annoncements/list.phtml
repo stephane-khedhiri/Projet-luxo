@@ -1,8 +1,10 @@
 <section class="container-table">
     <h1>mes annonces</h1>
-    <?php if($error):?>
+
+
+    <?php if(isset($sucess)):?>
         <div class="error">
-            <span><?=$error?></span>
+            <span><?=$sucess?></span>
         </div>
     <?php endif; ?>
     <?php if($annoncements): ?>

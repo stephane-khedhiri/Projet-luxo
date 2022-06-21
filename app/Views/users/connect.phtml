@@ -4,15 +4,13 @@
     <div class="success"><span><?=App::getInstance()->sucess?></span></div>
 <?php elseif(isset(App::getInstance()->error)):?>
     <div class="error">
-    <?php foreach(App::getInstance()->error as $k => $error):?>
-        <span class="error-message"><?=$error?></span>
-    <?php endforeach;?>
+        <span class="error-message"><?=App::getInstance()->error?></span>
     </div>
 <?php endif?>
 <section class='form'>
     <form action="index.php?action=user.connect" method="POST" id="connect">
         <h2>connection</h2>
-        <?=$form->input('mail', 'mail', ['type' => 'email'])?>
+        <?=$form->input('email', 'email', ['type' => 'email'])?>
         <?=$form->input('password','mot de passe',['type'=> "password"])?>
         <button type="submit">connect</button>
     </form>

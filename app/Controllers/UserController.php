@@ -29,26 +29,25 @@ class UserController extends AppControllers {
         if(!empty($_POST)){
 
                 $validator = new validator();
+
                 $validation = $validator->make($_POST, [
-                    'name' => 'required|text|lenght,4:15',
-                    'firstName' => 'required|text|lenght,4:15',
                     'username' => 'required|text|lenght,4:15',
                     'email'=> 'required|email',
+                    'password' => 'required|lenght,8:18|password',
                 ]);
 
                 $validation->validate();
+
             if(!$validation->getErrors()){
                 try {
                     $newUser = $validation->getData(UserEntity::class);
-
-                    $user = $this->user->getUserByMail($newUser->getMail());
+                    $user = $this->user->getUserByMail($newUser->getEmail());
                     if ($user){
                         throw new Exception("l'adresse mail existe déjà");
                     }
                     $create = $this->user->CreateUser($newUser);
                     if($create){
                         App::getInstance()->sucess = "Compte crée";
-                        header('Location:index.php?action=user.connect');
                     }
                 }catch (Exception $e){
                     if($this->isAjax()){
@@ -68,10 +67,10 @@ class UserController extends AppControllers {
                     http_response_code(400);
                     die();
                 }
-                App::getInstance()->error = $validation->getErrors()[0];
+                App::getInstance()->error = $validation->getErrors();
             }
         }
-        $this->render('Users.create', ['form'=> $form, 'error'=>App::getInstance()->error]);
+        $this->render('Users.create', ['form'=> $form]);
     }
     // make connect
     public function connect(){
@@ -87,16 +86,14 @@ class UserController extends AppControllers {
                 if(!$validation->getErrors()){
                     try {
 
-
                         $userCurrent = $validation->getData(UserEntity::class);
-                        $user = $this->user->getUserByMail($userCurrent->getMail());
+                        $user = $this->user->getUserByMail($userCurrent->getEmail());
                         if ($user) {
                             if (password_verify($userCurrent->getPassword(), $user->getPassword())) {
                                 $_SESSION['Users']['id'] = $user->getId();
-                                $_SESSION['Users']['name'] = $user->getName();
-                                $_SESSION['Users']['firstName'] = $user->getFirstName();
-                                $_SESSION['Users']['mail'] = $user->getMail();
+                                $_SESSION['Users']['mail'] = $user->getEmail();
                                 header('Location:index.php?action=users.annoncement.list');
+
                             } else {
                                 throw new Exception('le mot de passe incorrect !');
                             }
@@ -112,6 +109,7 @@ class UserController extends AppControllers {
                             die();
                         }
                         App::getInstance()->error = $e->getMessage();
+
                     }
                 }else{
                     if ($this->isAjax()) {
@@ -120,10 +118,7 @@ class UserController extends AppControllers {
                         http_response_code(400);
                         die();
                     }
-                    foreach($validation->getErrors() as $k => $errors){
 
-                    App::getInstance()->error=$errors;
-                    }
                 }
         }
         $this->render('users.connect', ['form' => $form]);

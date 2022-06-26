@@ -1,13 +1,9 @@
 
 <section class="form">
     <form action="#" method="POST">
-        <?=$form->input('name','text')?>
-        <?=$form->input('firstName','text')?>
-        <?=$form->input('mail','mail')?>
-        <?=$form->input('password','password')?>
-
-        <section class="button">
-        <button type="submit" name="edit">edit</button>
-        </section>
+        <h2>édit</h2>
+        <?=$form->input('username','nom', ['type'=> 'text'])?>
+        <?=$form->input('email','email', ['type'=>'email'])?>
+        <?=$form->submit()?>
     </form>
 </section>

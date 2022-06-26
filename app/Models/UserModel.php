@@ -51,29 +51,18 @@ class UserModel extends Models
     //récupére un utilisateur avec son id
     public function getUserById(int $id): UserEntity
     {
-        $user = $this->query('SELECT email,username  FROM users WHERE id=?', [$id], true, $this->entity);
+        $user = $this->query('SELECT id,email,username  FROM users WHERE id=?', [$id], true, $this->entity);
         return $user;
     }
     // modifier un utilisateur avec son id
     // passe en paramétre l entity Users
-    public function updateUser(int $id, UserEntity $user)
+    public function updateUser(UserEntity $user)
     {
-
-        if ($user->getPassword()) {
-
-            return $this->query('UPDATE users SET  username=?,email=?, password=? WHERE id=?',
-                [
-                    $user->getUsername(),
-                    $user->getEmail(),
-                    $user->getPasswordHash(),
-                    $id
-                ], true);
-        }
-        $this->query('UPDATE users SET  username=?,email=? WHERE id=?',
+        return $this->query('UPDATE users SET  username=?,email=? WHERE id=?',
             [
                 $user->getUsername(),
                 $user->getEmail(),
-                $id
+                $user->getId()
             ], true);
 
     }

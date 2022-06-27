@@ -22,7 +22,6 @@ use \App\Entitys\AnnoncementEntity;
         <?=$form->input('room','number', 'piéce')?>
         <?=$form->input('surface','number', 'surface')?>
         <?=$form->input('city', 'text', 'ville')?>
-        <?=$form->input('zip', 'text', 'postal')?>
         <?=$form->input('price', 'text', 'prix')?>
         <?=$form->option('category', AnnoncementEntity::CATEGORYS, 'categorie')?>
         <?=$form->option('type', AnnoncementEntity::TYPES, 'type')?>

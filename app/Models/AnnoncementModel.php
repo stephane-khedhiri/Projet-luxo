@@ -201,14 +201,13 @@ class AnnoncementModel extends Models{
     public function Add(AnnoncementEntity $annoncement){
 
         $this->query( "
-                    INSERT INTO annoncements(title, description, city, zip, price, date,date_at,
+                    INSERT INTO annoncements(title, description, city, price, date,date_at,
                     category, type, floor,surface,room,user_id)
                     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)  ;",
             [
                 $annoncement->getTitle(),
                 $annoncement->getDescription(),
                 $annoncement->getCity(),
-                $annoncement->getZip(),
                 $annoncement->getPrice(),
                 $annoncement->getDate(),
                 $annoncement->getDateAt(),

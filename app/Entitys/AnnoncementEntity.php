@@ -148,30 +148,12 @@ class AnnoncementEntity
      */
     public function setCity(string $city) :self
     {
-        if($city == ''){
-            throw new Exception(sprintf(self::REGEX['require'], 'ville/région'));
-        }elseif(preg_match(self::REGEX['city']['regex'], $city)){
-            throw new Exception(sprintf(self::REGEX['invalide'], 'ville/région'));
-        }
         $this->city = $city;
         return $this;
     }
     
     
-    public function getZip() :?string
-    {
-        return $this->zip;
-    }
-    public function setZip(string $zip) :self
-    {
-        if($zip == ''){
-            throw new Exception(sprintf(self::REGEX['require'], 'code postal'));
-        }elseif(preg_match(self::REGEX['zip']['regex'], $zip)){
-            throw new Exception(sprintf(self::REGEX['invalide'], 'code postal'));
-        }
-        $this->zip = $zip;
-        return $this;
-    }
+
 
     public function getCategory() :?int
     {
@@ -194,12 +176,8 @@ class AnnoncementEntity
     
     public function setPrice(string $price) :self
     {
-        if ($price = ''){
-            throw new Exception(sprintf(self::REGEX['require'], 'prix'));
-        }elseif (preg_match(self::REGEX['price'], $price)){
-            throw new Exception(sprintf(self::REGEX['invalide'], 'prix'));
-        }
-        $this->price = (int)$price;
+
+        $this->price = $price;
         
         return $this;
     }
@@ -240,12 +218,6 @@ class AnnoncementEntity
 
     public function setCategory(int $category): self
     {
-        if($category <= 0) {
-            throw new Exception(sprintf(self::REGEX['require'], 'categorie'));
-
-        }elseif ($category > 2) {
-            throw new Exception(sprintf(self::REGEX['invalide'], 'categorie'));
-        }
         $this->category = $category;
         
         return $this;
@@ -263,11 +235,6 @@ class AnnoncementEntity
 
     public function setType(int $type) :self
     {
-        if ($type <= 0){
-            throw new Exception(sprintf(self::REGEX['require'], 'type de bien'));
-        }elseif($type > 3){
-            throw new Exception(sprintf(self::REGEX['invalide'], 'type de bien'));
-        }
         $this->type = $type;
         
         return $this;

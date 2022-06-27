@@ -12,7 +12,7 @@ use Core\FILES\UploadOberserver;
 use Core\HTML\Form\Form;
 use Core\Validator\validator;
 use Exception;
-use PDOException;
+
 
 class AnnoncementController extends AppControllers
 {
@@ -45,7 +45,7 @@ class AnnoncementController extends AppControllers
             $form = new Form($_POST);
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 App::getInstance()->error = null;
-                try {
+
                     $valitator = new validator();
                     /*il faut ajouter le file */
                     $valitation = $valitator->make($_POST, [
@@ -55,47 +55,59 @@ class AnnoncementController extends AppControllers
                         'room' => 'required|interger',
                         'surface' => 'required|interger',
                         'price' => 'required|interger',
-                        'city' => 'required|text',
+                        'city' => 'required',
                         'category' => 'required',
                         'type' => 'required'
                     ]);
                     $valitation->validate();
-                    $annoncement= $valitation->getData(AnnoncementEntity::class);
-                    $annoncement->setUser($_SESSION['Users']['id']);
-                    $path = 'image/'.$annoncement->getCategoryToString().'/'.$annoncement->getUser().'/'.$annoncement->gettitle();
-                    $image = new ImageEntity();
-                    $uploader = new UploadOberserver();
-                    foreach ($uploader->getFiles('images') as $file){
-                        $fileName = $file;
-                        $handle = $uploader->upload($file);
-                        $fileName = $handle->getFileName().rand(0,999999);
-                        $handle->checkHasUploaded();
-                        $handle->setFileName($fileName);
-                        $handle->setMaxSize(.5);
-                        $handle->processUpload($this->uploadPath.$path);
-                        $image->setName($handle->getName());
-                        $image->setPath($path);
-                        $annoncement->AddImages($image);
-                    }
-                    $this->loadModel('annoncement');
-                    $result =$this->annoncement->Add($annoncement);
-                    if ($result){
-                        header('Location:index.php?action=users.annoncement.list');
+                    if (!$valitation->getErrors()){
+                        try {
+                            $annoncement= $valitation->getData(AnnoncementEntity::class);
+                            var_dump($annoncement);
+                            $annoncement->setUser($_SESSION['Users']['id']);
+                            $path = 'image/'.$annoncement->getCategoryToString().'/'.$annoncement->getUser().'/'.$annoncement->gettitle();
+                            $image = new ImageEntity();
+                            $uploader = new UploadOberserver();
+                            foreach ($uploader->getFiles('images') as $file){
+                                $fileName = $file;
+                                $handle = $uploader->upload($file);
+                                $fileName = $handle->getFileName().rand(0,999999);
+                                $handle->checkHasUploaded();
+                                $handle->setFileName($fileName);
+                                $handle->setMaxSize(.5);
+                                $handle->processUpload($this->uploadPath.$path);
+                                $image->setName($handle->getName());
+                                $image->setPath($path);
+                                $annoncement->AddImages($image);
+                            }
+                            $this->loadModel('annoncement');
+                            $result =$this->annoncement->Add($annoncement);
+                            if ($result){
+                                header('Location:index.php?action=users.annoncement.list');
 
+                            }else{
+                                throw new Exception("une error est survenu !!");
+
+                            }
+                        }catch (Exception $e){
+                            if ($this->isAjax()){
+                                echo json_encode(['name'=>$e->getTrace(), 'message' => $e->getMessage()]);
+                                header('Content-Type:application/json');
+                                http_response_code(400);
+                                die();
+                            }
+                            App::getInstance()->error = $e->getMessage();
+                        }
                     }else{
-                        throw new Exception("une error est survenu !!");
-
+                        if ($this->isAjax()){
+                            echo json_encode($valitation->getErrors());
+                            header('Content-Type:application/json');
+                            http_response_code(400);
+                            die();
+                        }
+                        App::getInstance()->error = $valitation->getMessage();
                     }
-                }catch (Exception $e){
-                    if ($this->isAjax()){
-                        echo json_encode(['name'=>$e->getTrace(), 'message' => $e->getMessage()]);
-                        header('Content-Type:application/json');
-                        http_response_code(400);
-                        die();
-                    }
-                    App::getInstance()->error = $e->getMessage();
 
-                }
             }
         $this->render('annoncements.create', ['form'=>$form, 'error'=> App::getInstance()->error]);
 

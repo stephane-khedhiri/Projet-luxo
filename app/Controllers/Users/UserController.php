@@ -70,6 +70,7 @@ class UserController extends AppControllers
             $this->disconnect();
         }
     }
+
     // disconnect
     public function disconnect(){
         session_unset();

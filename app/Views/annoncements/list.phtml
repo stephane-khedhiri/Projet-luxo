@@ -1,12 +1,15 @@
+<?php use App\App;?>
 <section class="container-table">
     <h1>mes annonces</h1>
-
-
-    <?php if(isset($sucess)):?>
-        <div class="error">
-            <span><?=$sucess?></span>
+    <?php if(isset(App::getInstance()->success)):?>
+        <div class="success">
+            <span class = "success-message"><?=App::getInstance()->success?></span>
         </div>
-    <?php endif; ?>
+    <?php elseif(App::getInstance()->error):?>
+        <div class="error">
+            <span class="error-message"><?=App::getInstance()->error?></span>
+        </div>
+    <?php endif;?>
     <?php if($annoncements): ?>
         <div class="tbl-header">
             <table>
@@ -23,7 +26,6 @@
         <div class="tbl-content">
             <table>
                 <tbody>
-
                     <?php foreach($annoncements as $annoncement):?>
                     <tr>
                         <td><?=$annoncement->getTitle()?></td>

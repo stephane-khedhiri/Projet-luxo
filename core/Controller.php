@@ -22,7 +22,19 @@ class Controller
 
         require ($this->viewPath . 'templates/' . $this->template . '.phtml');
     }
-
+    protected function redirect($view){
+        $action = explode('.', $view);
+        if($action[0] !== 'admins' && $action[0] !== 'users'){
+            $controller = '\App\Controllers\\'.ucfirst($action[0]).'Controller';
+            $method = $action[1];
+        }else{
+            $controller = '\App\Controllers\\'.ucfirst($action[0]).'\\'.ucfirst($action[1]).'Controller';
+            $method = $action[2];
+        }
+        $controller = new $controller();
+        $controller->$method();
+        die();
+    }
 
     /**
      * @return bool

@@ -58,15 +58,15 @@ class AnnoncementEntity
      */
     protected $type;
     /**
-     * @var integer
+     * @var int
      */
     protected $floor;
     /**
-     * @var integer
+     * @var int
      */
     protected $surface;
     /**
-     * @var integer
+     * @var int
      */
     protected $room;
     /**
@@ -79,18 +79,6 @@ class AnnoncementEntity
      */
     protected $image;
 
-    private const REGEX = [
-        'require' => 'le champ %s est requier',
-        'invalide' => 'le champ %s invalide',
-        'city' => [
-            'regex' => "/[a-zA-Z-]$/i",
-        ],
-        'zip' => [
-            'regex' => "/[0-9]{5}$/i"
-        ],
-        'price'=> "/(\d+[\.\s,\dk]+)|(\d+[\.\s,\dk]+)/i"
-
-    ];
 
     public function __construct()
     {
@@ -224,7 +212,7 @@ class AnnoncementEntity
     }
     
     
-    public function getType() :?string
+    public function getType() :?int
     {
         return $this->type;
     }

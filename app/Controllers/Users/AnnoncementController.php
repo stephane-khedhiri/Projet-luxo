@@ -37,7 +37,7 @@ class AnnoncementController extends AppControllers
             App::getInstance()->error = $e->getMessage();
         }
 
-        $this->render('annoncements.list', ['annoncements'=>$annoncements,"pages"=> $pages, "currentPage" => $currentPage, 'success'=> App::getInstance()->getControllers()->sucess]);
+        $this->render('annoncements.list', ['annoncements'=>$annoncements,"pages"=> $pages, "currentPage" => $currentPage]);
     }
     // permet que l'utilisateur de poste une annonce
     public function create(){
@@ -45,7 +45,6 @@ class AnnoncementController extends AppControllers
             $form = new Form($_POST);
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 App::getInstance()->error = null;
-
                     $valitator = new validator();
                     /*il faut ajouter le file */
                     $valitation = $valitator->make($_POST, [
@@ -62,8 +61,8 @@ class AnnoncementController extends AppControllers
                     $valitation->validate();
                     if (!$valitation->getErrors()){
                         try {
-                            $annoncement= $valitation->getData(AnnoncementEntity::class);
-                            var_dump($annoncement);
+                            var_dump($_FILES);
+                            $annoncement = $valitation->getData(AnnoncementEntity::class);
                             $annoncement->setUser($_SESSION['Users']['id']);
                             $path = 'image/'.$annoncement->getCategoryToString().'/'.$annoncement->getUser().'/'.$annoncement->gettitle();
                             $image = new ImageEntity();
@@ -83,7 +82,14 @@ class AnnoncementController extends AppControllers
                             $this->loadModel('annoncement');
                             $result =$this->annoncement->Add($annoncement);
                             if ($result){
-                                header('Location:index.php?action=users.annoncement.list');
+                                if($this->isAjax()){
+                                    echo json_encode(['redirect' => 'users.annoncement.list']);
+                                    header('Content-Type: application/json');
+                                    http_response_code(200);
+                                    die();
+                                }
+                                App::getInstance()->success = 'votre annonce a bien était engistre';
+                                $this->redirect('users.annoncement.list');
 
                             }else{
                                 throw new Exception("une error est survenu !!");

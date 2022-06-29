@@ -48,7 +48,7 @@
         <a href="index.php?action=<?=$_GET['action']?>&pages=<?=$currentPage - 1?>">&laquo; Page précédent</a>
     <?php endif;?>
     <?php for($i= 1; $i <= $pages; $i++):?>
-        <a  <?=($i == $currentPage)?'id="active"':''?>" href="index.php?action=<?=$_GET['action']?>&pages=<?=$i?>"><?=$i?></a>
+        <a  <?=($i == $currentPage)?'id="active"':''?> href="index.php?action=<?=$_GET['action']?>&pages=<?=$i?>"><?=$i?></a>
     <?php endfor;?>
     <?php if($currentPage < $pages):?>
         <a href="index.php?action=<?=$_GET['action']?>&pages=<?=$currentPage + 1?>"> Page suivante &raquo</a>

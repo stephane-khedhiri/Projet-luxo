@@ -47,6 +47,12 @@ class UserController extends AppControllers {
                     }
                     $create = $this->user->CreateUser($newUser);
                     if($create){
+                        if($this->isAjax()){
+                            echo json_encode(['redirect' => 'users.connect']);
+                            header('Content-Type: application/json');
+                            http_response_code(200);
+                            die();
+                        }
                         App::getInstance()->sucess = "Compte crée";
                     }
                 }catch (Exception $e){

@@ -200,10 +200,10 @@ class AnnoncementModel extends Models{
     }
     public function Add(AnnoncementEntity $annoncement){
 
-        $this->query( "
+        $result = $this->query( "
                     INSERT INTO annoncements(title, description, city, price, date,date_at,
                     category, type, floor,surface,room,user_id)
-                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)  ;",
+                    VALUES(?,?,?,?,?,?,?,?,?,?,?,?)  ;",
             [
                 $annoncement->getTitle(),
                 $annoncement->getDescription(),
@@ -218,7 +218,7 @@ class AnnoncementModel extends Models{
                 $annoncement->getRoom(),
                 $annoncement->getUser()
             ]);
-        $annoncement->setId((int)$this->db->lastInsertId('annoncements'));
+        $annoncement->setId((int)$this->db->lastInsertId());
         foreach ($annoncement->getImages() as $image){
              $result = $this->query("INSERT INTO images(name, path)value(?,?)",
                  [$image->getName(), $image->getPath()]
@@ -229,7 +229,7 @@ class AnnoncementModel extends Models{
                  [$annoncement->getId(), $image->getId()]
              );
         }
-
+        return $result;
     }
    
 }

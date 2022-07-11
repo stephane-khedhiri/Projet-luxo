@@ -5,9 +5,6 @@ namespace App\Controllers\Users;
 use App\App;
 use App\Entitys\AnnoncementEntity;
 use App\Entitys\ImageEntity;
-use Core\FILES\Upload;
-use Core\FILES\Files;
-use Core\FILES\Uploader;
 use Core\FILES\UploadOberserver;
 use Core\HTML\Form\Form;
 use Core\Validator\validator;
@@ -61,7 +58,6 @@ class AnnoncementController extends AppControllers
                     $valitation->validate();
                     if (!$valitation->getErrors()){
                         try {
-                            var_dump($_FILES);
                             $annoncement = $valitation->getData(AnnoncementEntity::class);
                             $annoncement->setUser($_SESSION['Users']['id']);
                             $path = 'image/'.$annoncement->getCategoryToString().'/'.$annoncement->getUser().'/'.$annoncement->gettitle();
@@ -82,12 +78,6 @@ class AnnoncementController extends AppControllers
                             $this->loadModel('annoncement');
                             $result =$this->annoncement->Add($annoncement);
                             if ($result){
-                                if($this->isAjax()){
-                                    echo json_encode(['redirect' => 'users.annoncement.list']);
-                                    header('Content-Type: application/json');
-                                    http_response_code(200);
-                                    die();
-                                }
                                 App::getInstance()->success = 'votre annonce a bien était engistre';
                                 $this->redirect('users.annoncement.list');
 
@@ -96,12 +86,6 @@ class AnnoncementController extends AppControllers
 
                             }
                         }catch (Exception $e){
-                            if ($this->isAjax()){
-                                echo json_encode(['name'=>$e->getTrace(), 'message' => $e->getMessage()]);
-                                header('Content-Type:application/json');
-                                http_response_code(400);
-                                die();
-                            }
                             App::getInstance()->error = $e->getMessage();
                         }
                     }else{

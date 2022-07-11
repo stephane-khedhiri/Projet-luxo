@@ -62,7 +62,10 @@ form.addEventListener('submit',function(e){
                     createError(key, value)
                 }
             }else{
-                window.location.search = 'user.connect'
+               let datas = JSON.parse(request.responseText);
+               let part = window.location.search.split('=')
+                part[1] = datas.redirect
+                window.location.search = part.join('=')
             }
         }
     }

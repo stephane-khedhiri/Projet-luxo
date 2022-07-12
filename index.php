@@ -2,13 +2,18 @@
 
 use App\App;
 
+die($_GET['url']);
 define('ROOT', dirname(__DIR__));
 
-require ROOT.'/app/App.php';
+
+require ROOT . '/app/App.php';
 
 App::load();
 
 App::getInstance()->addvisitor();
+
+
+
 if(isset($_GET['action'])){
     $action = $_GET['action'];
 }else{

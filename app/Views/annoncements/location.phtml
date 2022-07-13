@@ -1,8 +1,9 @@
 <section class="container-annoncement">
-    <?php foreach($annoncements as $annoncement):?>
+    <?php use App\App;
+    foreach($annoncements as $annoncement):?>
 
             <article>
-                <a href="index.php?action=annoncement.detail&id=<?=$annoncement->getId()?>">
+                <a href="<?=App::getInstance()->routes->url('Annoncement.detail', ['id' => $annoncement->getId()])?>">
               <!-- <section class="slider">
                     <div class="flexslider">
                         <ul class="slides">-->
@@ -17,7 +18,7 @@
                 </section>
                 -->
                 <h3><?=$annoncement->getTitle()?></h3>
-                <span><?=$annoncement->getCity().'/'.$annoncement->getZip()?></span>
+                <span><?=$annoncement->getCity()?></span>
                 </a>
             </article>
 
@@ -25,12 +26,12 @@
 </section>
 <div class = "pagination">
     <?php if($currentPage > 1):?>
-        <a href="index.php?action=<?=$_GET['action']?>&p=<?=$currentPage - 1?>">&laquo; Page précédent</a>
+        <a href="<?=App::getInstance()->routes->url('Annoncement.category',['slug'=>'location'])?>&p=<?=$currentPage - 1?>">&laquo; Page précédent</a>
     <?php endif;?>
     <?php for($i= 1; $i <= $pages; $i++):?>
-        <a  <?=($i == $currentPage)?'id="active"':''?>" href="index.php?action=<?=$_GET['action']?>&pages=<?=$i?>"><?=$i?></a>
+        <a <?=($i == $currentPage)?'id="active"':''?> href="<?=App::getInstance()->routes->url('Annoncement.category',['slug'=>'location'])?>&p=<?=$i?>"><?=$i?></a>
     <?php endfor;?>
     <?php if($currentPage < $pages):?>
-        <a href="index.php?action=<?=$_GET['action']?>&p=<?=$currentPage + 1?>"> Page suivante &raquo</a>
+        <a href="<?=App::getInstance()->routes->url('Annoncement.category',['slug'=>'location'])?>&p=<?=$currentPage + 1?>"> Page suivante &raquo</a>
     <?php endif ?>
 </div>

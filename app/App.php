@@ -7,7 +7,8 @@ use App\Models\UserModel;
 use App\Models\VisitorModel;
 use Core\Config;
 use Core\Database;
-
+use Core\Router\Router;
+use Core\Routes;
 
 
 class App
@@ -37,6 +38,8 @@ class App
      */
     private static $_instance;
 
+    public $routes;
+
     /**
      *
      * @return App
@@ -44,11 +47,30 @@ class App
     public static function getInstance()
     {
         if (is_null(self::$_instance)){
-            self::$_instance =new App();
+            self::$_instance = new App();
         }
         return self::$_instance;
     }
+    public function getRouter($url){
+        if(is_null($this->routes)){
+            $routes = new Routes(ROOT . '/config/routes.php');
+            $router = new Router($url);
 
+            foreach ($routes->get('GET') as $path => $controller){
+                $router->get($path, $controller)
+                    ->with('id', '[0-9]+')
+                    ->with('slug', '[a-z\-0-9]+');
+            }
+            foreach ($routes->get('POST') as $path => $controller){
+
+                $router->post($path, $controller);
+            }
+            $this->routes = $router;
+
+        }
+        return $this->routes;
+
+    }
     /**
      * add visitors in database
      * @return void

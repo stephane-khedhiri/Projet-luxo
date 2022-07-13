@@ -98,7 +98,7 @@ class UserController extends AppControllers {
                             if (password_verify($userCurrent->getPassword(), $user->getPassword())) {
                                 $_SESSION['Users']['id'] = $user->getId();
                                 $_SESSION['Users']['mail'] = $user->getEmail();
-                                header('Location:index.php?action=users.annoncement.list');
+                                header('Location:'. App::getInstance()->routes->url('Annoncement.home'));
 
                             } else {
                                 throw new Exception('le mot de passe incorrect !');
@@ -136,6 +136,13 @@ class UserController extends AppControllers {
         } else {
             return false;
         }
+    }
+    // disconnect
+    public function disconnect(){
+
+        session_unset();
+        session_destroy();
+        header('Location:'. App::getInstance()->routes->url('Annoncement.home'));
     }
 
 

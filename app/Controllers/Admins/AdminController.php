@@ -4,10 +4,10 @@ namespace App\Controllers\Admins;
 
 
 use App\App;
-use App\Controllers\AppControllers;
-use Core\Controller;
+
+
 use App\Entitys\AdminEntity as EntityAdmin;
-use Core\HTML\Form;
+use Core\HTML\Form\Form;
 
 
 class AdminController extends AppControllers {
@@ -17,15 +17,18 @@ class AdminController extends AppControllers {
         $this->loadModel('admin');
         $this->loadModel('visitor');
         $this->loadModel('annoncement');
-        $this->loadModel('Users');
+        $this->loadModel('User');
 
         $this->errors = array();
     }
     // rendu page connection + verification
     public function connect(){
+        if($this->isConnected()){
+            $this->redirect('Admins.Admin.statis');
+        }
         App::getInstance()->title = 'connection';
-        $form = new Form($_POST, $this->errors, $this->EntityAdmin);
-        if(isset($_POST['connection'])){
+        $form = new Form($_POST);
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $form->validateur(['text', 'required'],'Users');
             $form->validateur(['text', 'required', 'length'], 'password', 4, 50);
             if(empty($form->getErrors())){
@@ -37,7 +40,7 @@ class AdminController extends AppControllers {
                     if(!password_verify($userCurrent->getPassword(), $user->getPassword())){
                         $form->AddError('password', 'mot de passe incorrecte !');
                     }else{
-                        $_SESSION['admins']['mail'] = $user->getUsername();
+                        $_SESSION['admin']['mail'] = $user->getUsername();
                         header('Location:index.php?action=admins.admin.statis');
                     }
                 }
@@ -48,10 +51,12 @@ class AdminController extends AppControllers {
     }
 
     // rendu page statistique
-    public function statis(){
-        if($this->isConnected()){
+    public function statis($id = null){
+            if(!$this->isConnected()){
+                $this->redirect('Admins.Admin.connect');
+            }
             App::getInstance()->title = 'statis';
-            $year = (isset($_GET['year'])?$_GET['year']:date('Y'));
+            $year = (isset($id['year'])?$id:date('Y'));
             $visiteurGrafig = $this->visitor->getVuesByDate($year);
             $usersGrafig = $this->visitor->getVueUser($year);
             if(!$visiteurGrafig || !$usersGrafig){
@@ -63,14 +68,14 @@ class AdminController extends AppControllers {
                     'usersGrafig' => $usersGrafig
                 ]);
 
-        }else{
-            header('Location: index.php?action=admins.admin.connect');
-        }
+
     }
 
     // rendu page Utilisateur
     public function Users(){
-        if($this->isConnected()) {
+        if(!$this->isConnected()){
+            $this->redirect('Admins.Admin.connect');
+        }
             App::getInstance()->title = 'Utilisateurs';
             $currentPage = (int)($_GET['p'] ?? 1);
             $limit = 10;
@@ -81,43 +86,38 @@ class AdminController extends AppControllers {
                 $alert = 'aucun Users incrit pour le moment';
             }
             $this->render('admins.Users', ['Users' => $users, 'pages' => $pages, 'currentPage' => $currentPage]);
-        }else{
-            header('location:index.php&action=admins.admin.connect');
-        }
-
     }
 
     // rendu page info Users
-    public function User(){
-        App::getInstance()->title = 'utilisateur';
-        if($this->isConnected()){
-            // virifier que get id et superieur a 0
-
-                $id = (int)$_GET['id'];
-                $currentPage = (int) ($_GET['p'] ?? 1);
-                $limit = 16;
-                $count = $this->annoncement->count(['user_id' => $id]);
-                $pages = ceil($count / $limit);
-
-                /*if($currentPage > $pages){
-                    throw new \Exception('cette page n\'existe pas');
-                }*/
-
-                $annoncements = $this->annoncement->getAnnoncements(['user_id'=> $id],$limit,"date_at",false,$currentPage);
-            $this->render('admins.Users', [
-                'annoncements' => $annoncements,
-                'pages' => $pages,
-                'currentPage' => $currentPage
-                ]);
-        }else{
-            header('Location:index.php&action=admins.admin.connect');
+    public function User($id){
+        if(!$this->isConnected()){
+            $this->redirect('Admins.admin.connect');
         }
+        App::getInstance()->title = 'utilisateur';
+
+        $currentPage = (int)($_GET['p'] ?? 1);
+        $limit = 16;
+        $count = $this->annoncement->count(['user_id' => $id]);
+        $pages = ceil($count / $limit);
+
+        if($currentPage > $pages){
+            throw new \Exception('cette page n\'existe pas');
+        }
+
+        $annoncements = $this->annoncement->getAnnoncements(['user_id'=> $id],$limit,"date_at",false,$currentPage);
+        $this->render('admins.Users', [
+        'annoncements' => $annoncements,
+        'id', $id,
+        'pages' => $pages,
+        'currentPage' => $currentPage
+        ]);
+
 
     }
 
 
     public function isConnected(){
-        if(isset($_SESSION['admins'])){
+        if(isset($_SESSION['admin'])){
             return true;
         }else{
             return false;

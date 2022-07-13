@@ -15,18 +15,23 @@ class AnnoncementModel extends Models{
     protected $table = 'annoncements';
     // récupéré une annonce avec un id de l'annonce
 
-    public function getAnnoncementById(int $id):AnnoncementModel{
-        return $this->query("SELECT 
-                            a.id, a.title, a.description, a.city, a.zip, a.price,
-                            a.date, a.category, a.type, a.floor, a.surface, a.room,
-                            i.name, i.path
-                            user_id AS Users,
-                            date_at AS dateAt
-                            FROM annoncements AS a
-                            JOIN annoncements_images AS ai ON ai.annoncement_id = a.id
-                            JOIN images AS i ON i.id = ai.image_id
-                            WHERE a.id = ?;
-        ");
+    public function getAnnoncementById(int $id) : AnnoncementEntity
+    {
+        $annoncement = $this->query("
+                        SELECT a.id, a.title, a.description, a.city, a.zip, a.price,
+                               a.date, a.category, a.type, a.floor, a.surface, a.room,a.date_at
+                        FROM annoncements AS a
+                        WHERE a.id = ?",
+                [$id], true , AnnoncementEntity::class);
+
+        $images = $this->query("SELECT i.id, i.name, i.path FROM images as i
+                                LEFT JOIN annoncements_images as ai ON ai.image_id = i.id
+                                WHERE ai.annoncement_id = ?",
+                [$annoncement->getId()], false , ImageEntity::class);
+        $annoncement->AddImages($images);
+
+        return $annoncement;
+
 
     }
     // récupéré des annonce avec l'id de createur
@@ -130,7 +135,6 @@ class AnnoncementModel extends Models{
         $offset = $limit * ($currentPage -1);
         $query = $this->query("SELECT id, titre, description, ville, postal, prix, date,category, type, Users FROM annoncements WHERE category = $categorie LIMIT $limit OFFSET $offset;");
         $annoncements = $query->fetchAll(PDO::FETCH_CLASS, AnnoncementModel::class);
-        var_dump($query->errorInfo());
 
 
         return $annoncements;
@@ -157,7 +161,7 @@ class AnnoncementModel extends Models{
     }
     // supprimé une annonce avec l'id de l'annonce
     public function deleted(int $id, $userid){
-        $query = $this->query("DELETE FROM annoncements WHERE id = ? AND user_id LIMIT 1", [$id, $userid]);
+        $query = $this->query("DELETE FROM annoncements WHERE id = ? AND user_id = ? LIMIT 1", [$id, $userid]);
         if(!$query){
             throw new Exception("error est survenu veuillez ressayer!");
         }
@@ -184,7 +188,9 @@ class AnnoncementModel extends Models{
     }
     // Ajouter une annonce
     public function getAnnoncement($id, $userid){
-        $annoncement = $this->query("SELECT annoncements.category, annoncements.title, annoncements.date_at, annoncements.id, annoncements.city, annoncements.zip,
+        $annoncement = $this->query("SELECT annoncements.category, annoncements.title,
+                        annoncements.date_at, annoncements.id, annoncements.city, annoncements.zip,
+                        annoncements.surface, annoncements.room, annoncements.floor,
                         annoncements.description, annoncements.price, annoncements.user_id FROM annoncements WHERE id = ? AND user_id = ?",
         [$id, $userid],true, AnnoncementEntity::class);
         if ($annoncement){

@@ -35,6 +35,7 @@ class Router
     }
 
     public function run(){
+
         if(!isset($this->routes[$_SERVER['REQUEST_METHOD']])){
             throw new RouterException('Method does not exist');
         }
@@ -48,7 +49,6 @@ class Router
     }
 
     public function url($name, $params = []){
-
         if(!isset($this->namedRoutes[$name])){
             throw new RouterException('No route matches this name');
         }

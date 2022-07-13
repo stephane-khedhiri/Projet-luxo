@@ -71,10 +71,4 @@ class UserController extends AppControllers
         }
     }
 
-    // disconnect
-    public function disconnect(){
-        session_unset();
-        session_destroy();
-        header('Location:index.php');
-    }
 }

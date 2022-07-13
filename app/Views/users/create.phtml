@@ -3,7 +3,7 @@
 if(isset(App::getInstance()->sucess)):?>
     <div class="success"><span><?=App::getInstance()->sucess?></span></div>
 <?php elseif(isset(App::getInstance()->error)):?>
-    <div class="error"><span class="error-message"><?php var_dump(App::getInstance()->error)?></span></div>
+    <div class="error"><span class="error-message"><?=App::getInstance()->error?></span></div>
 <?php endif?>
 <section class="form">
     <!-- id permet de selection le formulaire pour la verification -->

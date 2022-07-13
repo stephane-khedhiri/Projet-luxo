@@ -1,6 +1,8 @@
-
+<?php
+use App\App;
+?>
 <section class="form">
-    <form action="#" method="POST">
+    <form action="<?= App::getInstance()->routes->url('Users.User.edit')?>" method="POST">
         <h2>édit</h2>
         <?=$form->input('username','nom', ['type'=> 'text'])?>
         <?=$form->input('email','email', ['type'=>'email'])?>

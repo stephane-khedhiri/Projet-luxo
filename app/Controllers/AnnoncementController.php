@@ -29,8 +29,7 @@ class AnnoncementController extends AppControllers {
 
     }
     // page pour déferente categorie location ou achat 
-    public function category(){
-        $category = (isset($_GET['c'])? $_GET['c']:'achat');
+    public function category($category){
         $currentPage = (int) ($_GET['p'] ?? 1);
         $limit = 16;
         $count = $this->annoncement->count(['category' => EntityAnnoncement::getCategoryByKey($category)]);
@@ -43,17 +42,12 @@ class AnnoncementController extends AppControllers {
         $this->render("annoncements.$category", ["annoncements" => $annoncements, "pages"=> $pages, "currentPage" => $currentPage]);
     }
     // detail de l'annonce
-    public function detail(){
-        if(isset($_GET['id'])) {
-            App::getInstance()->title = 'detail';
-            $annoncement = $this->annoncement->find((int)$_GET['id'], EntityAnnoncement::class);
-            if (!$annoncement) {
-                header('Location:index.php');
-            }
-            $this->render('annoncements.detail', ['annoncement' => $annoncement]);
-        }else{
-            header('location:index.php');
+    public function detail($id){
+        App::getInstance()->title = 'detail';
+        $annoncement = $this->annoncement->getAnnoncementById($id);
+        if (!$annoncement) {
+            $this->redirect('Annoncement.home');
         }
-
+        $this->render('annoncements.detail', ['annoncement' => $annoncement]);
     }
 }

@@ -20,39 +20,39 @@ use App\App;
 </head>
 <body>
     <header>
-        <a href="index.php?action=annoncement.home"><img class="logo" src=".././public/image/logo.png" alt="logo de luxo"></a>
+        <a href="<?=App::getInstance()->routes->url('Annoncement.home')?>"><img class="logo" src=".././public/image/logo.png" alt="logo de luxo"></a>
         <nav>
-            <a href="index.php?action=annoncement.category&c=achat">achat</a>
-            <a href="index.php?action=annoncement.category&c=location">location</a>
+            <a href="<?=App::getInstance()->routes->url('Annoncement.category',['slug'=>'achat'])?>">achat</a>
+            <a href="<?=App::getInstance()->routes->url('Annoncement.category',['slug'=>'location'])?>">location</a>
             <?php if(App::getInstance()->is_admin()):?>
 
                 <ul class="menu">
                     <li>
-                        <a href="index.php?action=admins.admin.statis">statistique</a>
+                        <a href="<?=App::getInstance()->routes->url('Admins.Admin.statis', ['id' => date('Y')])?>">statistique</a>
                         <ul class="sous">
                             <?php for ($date = date('Y'); $date > date('Y')-5; $date--):?>
-                            <li><a href="index.php?action=admins.admin.statis&year=<?=$date?>"><?=$date?></a></li>
+                            <li><a href="<?=App::getInstance()->routes->url('Admins.Admin.statis', ['id' => $date])?>"><?=$date?></a></li>
                             <?php endfor;?>
                         </ul>
                     </li>
                 </ul>
-                <a href="index.php?action=admins.admin.users">utilisateur</a></li>
-                <a href="index.php?action=admins.admin.disconnect">déconnection</a>
+                <a href="<?=App::getInstance()->routes->url('Admins.Admin.users')?>">utilisateur</a></li>
+                <a href="<?=App::getInstance()->routes->url('User.disconnect')?>">déconnection</a>
             <?php elseif(App::getInstance()->is_user()):?>
                 <ul class="menu">
                     <li>
                         <a href="#"><i class="fa-solid fa-user"></i></a>
                         <ul class="user">
-				            <li><a href="index.php?action=users.user.edit">compte</a></li>
-                            <li><a href="index.php?action=users.annoncement.list">annonces</a></li>
-                            <li><a href="index.php?action=users.user.disconnect">déconnection</a></li>
-                            <li><a href="index.php?action=users.user.deleted" style="color: #cc0033">supprimer</a> </li>
+				            <li><a href="<?=App::getInstance()->routes->url('Users.User.edit')?>">compte</a></li>
+                            <li><a href="<?=App::getInstance()->routes->url('Users.Annoncement.list')?>">annonces</a></li>
+                            <li><a href="<?=App::getInstance()->routes->url('Users.User.disconnect')?>">déconnection</a></li>
+                            <li><a href="<?=App::getInstance()->routes->url('Users.User.deleted')?>" style="color: #cc0033">supprimer</a> </li>
                         </ul>
                     </li>
                 </ul>
             <?php else:?>
-                <a href="index.php?action=user.create">s'inscrire</a>
-                <a href="index.php?action=user.connect">connection</a>
+                <a href="<?=App::getInstance()->routes->url('User.create')?>">s'inscrire</a>
+                <a href="<?=App::getInstance()->routes->url('User.connect')?>">connection</a>
             <?php endif;?>
         </nav>
 

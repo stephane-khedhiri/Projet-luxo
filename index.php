@@ -2,8 +2,8 @@
 
 use App\App;
 
-die($_GET['url']);
-define('ROOT', dirname(__DIR__));
+
+define('ROOT', dirname(__DIR__.DIRECTORY_SEPARATOR.'Luxo'));
 
 
 require ROOT . '/app/App.php';
@@ -11,13 +11,15 @@ require ROOT . '/app/App.php';
 App::load();
 
 App::getInstance()->addvisitor();
+$route = App::getInstance()->getRouter($_GET['url']);
+$route->run();
 
 
-
-if(isset($_GET['action'])){
-    $action = $_GET['action'];
+/*
+if(isset($_GET['url'])){
+    $action = $_GET['url'];
 }else{
-    $action = 'Annoncement.home';
+    $action = 'home';
 }
 
 $action = explode('.', $action);
@@ -53,4 +55,4 @@ if(method_exists($controller, $action[2])){
 $controller = new $controller();
 
 $controller->$method();
-
+*/

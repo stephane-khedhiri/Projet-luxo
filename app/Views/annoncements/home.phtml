@@ -10,7 +10,7 @@
     <h2>location</h2>
     <?php foreach ($locations as $location): ?>
         <article>
-            <a href="index.php?action=annoncement.detail&id=<?= $location->getId() ?>">
+            <a href="<?=App::getInstance()->routes->url('Annoncement.detail', ['id' => $location->getId()])?>">
                 <section class="slider">
                     <div class="flexslider">
                         <ul class="slides">
@@ -37,7 +37,7 @@
     <h2>achat</h2>
     <?php foreach ($achats as $achat): ?>
         <article>
-            <a href="index.php?action=annoncement.detail&id=<?= $achat->getId() ?>">
+            <a href="<?=App::getInstance()->routes->url('Annoncement.detail', ['id' => $achat->getId()])?>">
                 <section class="slider">
                     <div class="flexslider">
                         <ul class="slides">

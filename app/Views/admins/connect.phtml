@@ -1,7 +1,12 @@
+<?php
+
+use App\App;
+
+?>
 <section class = 'inscrire'>
-    <form action ='#' method ='post'>
-        <?=$form->input('Username', 'text')?>
-        <?=$form->input('password', 'password')?>
-        <?=$form->button('connection')?>
+    <form action ='<?= App::getInstance()->routes->url('Admins.Admin.connect')?>' method ='POST'>
+        <?=$form->input('Username', 'utilisateur', ['type' => 'text'])?>
+        <?=$form->input('password', 'mot de passe', ['type' => 'password'])?>
+        <?=$form->submit()?>
     </form>
 </section>

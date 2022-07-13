@@ -8,7 +8,7 @@
     </div>
 <?php endif?>
 <section class='form'>
-    <form action="index.php?action=user.connect" method="POST" id="connect">
+    <form action="<?=App::getInstance()->routes->url('User.connect')?>" method="POST" id="connect">
         <h2>connection</h2>
         <?=$form->input('email', 'email', ['type' => 'email'])?>
         <?=$form->input('password','mot de passe',['type'=> "password"])?>

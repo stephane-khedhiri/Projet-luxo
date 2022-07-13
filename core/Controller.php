@@ -2,6 +2,9 @@
 
 namespace Core;
 
+use App\App;
+use Core\Router\RouterException;
+
 class Controller
 {
     protected $viewPath;
@@ -17,22 +20,17 @@ class Controller
         ob_start();
         extract($variables);
 
-        require ($this->viewPath . str_replace('.', '/', $view).'.phtml');
+        require($this->viewPath . str_replace('.', '/', $view).'.phtml');
         $content = ob_get_clean();
 
         require ($this->viewPath . 'templates/' . $this->template . '.phtml');
     }
-    protected function redirect($view){
-        $action = explode('.', $view);
-        if($action[0] !== 'admins' && $action[0] !== 'users'){
-            $controller = '\App\Controllers\\'.ucfirst($action[0]).'Controller';
-            $method = $action[1];
-        }else{
-            $controller = '\App\Controllers\\'.ucfirst($action[0]).'\\'.ucfirst($action[1]).'Controller';
-            $method = $action[2];
-        }
-        $controller = new $controller();
-        $controller->$method();
+    protected function redirect($path){
+
+
+        $url = App::getInstance()->routes->url($path);
+        header('Location:'.$url);
+        http_response_code('301');
         die();
     }
 

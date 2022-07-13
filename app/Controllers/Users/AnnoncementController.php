@@ -103,13 +103,13 @@ class AnnoncementController extends AppControllers
 
     }
     // permet que l'utilisateur éditer sa propos  annonce
-    public function edit()
+    public function edit($id)
     {
         App::getInstance()->title = 'edit';
         $this->loadModel('annoncement');
-        $annoncement = $this->annoncement->getAnnoncement($_GET['id'], $_SESSION['Users']['id']);
+        $annoncement = $this->annoncement->getAnnoncement($id, $_SESSION['Users']['id']);
 
-        $form = new Form($_POST, [], $annoncement);
+        $form = new Form($annoncement);
 
         if (isset($_POST['modifier'])) {
 
@@ -120,19 +120,19 @@ class AnnoncementController extends AppControllers
 
 
     // permet que l'utilisateur suprrime sa propos annonce
-    public function deleted(){
+    public function deleted($id){
         App::getInstance()->title = 'detail';
-            if(isset($_GET['id'])){
-                try{
-                $this->loadModel('annoncement');
-                $this->annoncement->deleted($_GET['id'], $_SESSION['Users']['id']);
-                header('Location: index.php?action=users.annoncement.list');
-                }catch (Exception $e){
-                    $error = $e->getMessage();
-                    $this->list();
-                }
-            }
 
+        try{
+            $this->loadModel('annoncement');
+            $this->annoncement->deleted($id, $_SESSION['Users']['id']);
+            App::getInstance()->success = 'votre annonce est suprime';
+            $this->redirect('Users.Annoncement.list');
+
+        }catch (Exception $e){
+            App::getInstance()->error = 'error';
+            $this->redirect('Users.Annoncement.list');
+        }
     }
 
 }
